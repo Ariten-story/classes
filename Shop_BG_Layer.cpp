@@ -11,7 +11,7 @@ bool Shop_BG::init()
 
 	Size winSize = Director::getInstance()->getWinSize();
 
-	auto pBackGround = Sprite::create("Images/INN/INN_BG1.png");
+	auto pBackGround = Sprite::create("INN_BG1.png");
 	if (!pBackGround)
 	{
 		return false;

@@ -3,7 +3,8 @@
 #include "CharInvenScene.h"
 #include "CharSkillScean.h"
 #include "ShopScean.h"
-#include "CharSlotScene.h"
+#include "GameIntroScene.h"
+#include "DefenceGameScene.h"
 
 USING_NS_CC;
 
@@ -75,11 +76,13 @@ void INN_MENU::ShopButton(Object* pSender)
 void INN_MENU::MissionStartButton(Object* pSender)
 {
 	log("Mission click");
+	auto *pScene = Defence::createScene();
+	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }
 
 void INN_MENU::ExitButton(Object* pSender)
 {
 	log("Back click");
-	auto *pScene = CharSlot::createScene();
+	auto *pScene = GameIntro::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }

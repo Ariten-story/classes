@@ -15,10 +15,10 @@ bool CharInfo_MENU::init()
 
 	Size winSize = Director::getInstance()->getWinSize();
 
-	auto spr_Menu_1 = Sprite::create("images/Info/Info_First.png");
-	auto spr_Menu_2 = Sprite::create("images/Info/Info_Second.png");
-	auto spr_Menu_3 = Sprite::create("images/Info/Info_Third.png");
-	auto spr_Menu_4 = Sprite::create("images/Info/Info_Out.png");
+	auto spr_Menu_1 = Sprite::create("Info_First.png");
+	auto spr_Menu_2 = Sprite::create("Info_Second.png");
+	auto spr_Menu_3 = Sprite::create("Info_Third.png");
+	auto spr_Menu_4 = Sprite::create("Info_Out.png");
 
 	auto MenuItem1 = MenuItemSprite::create(spr_Menu_1, spr_Menu_1, CC_CALLBACK_1(CharInfo_MENU::Info_First, this));
 	auto MenuItem2 = MenuItemSprite::create(spr_Menu_2, spr_Menu_2, CC_CALLBACK_1(CharInfo_MENU::Info_Second, this));

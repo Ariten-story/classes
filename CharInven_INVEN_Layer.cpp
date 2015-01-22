@@ -68,7 +68,7 @@ void CharInven_INVEN::WeaponSlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);
@@ -88,7 +88,7 @@ void CharInven_INVEN::ArmorSlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);
@@ -107,7 +107,7 @@ void CharInven_INVEN::AccessorySlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);
@@ -126,7 +126,7 @@ void CharInven_INVEN::ConsumSlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);
@@ -145,7 +145,7 @@ void CharInven_INVEN::ReinforceSlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);
@@ -164,7 +164,7 @@ void CharInven_INVEN::MyinvenSlot(Object* pSender)
 		auto pInven_d = (Sprite *)getChildByTag(j);
 		this->removeChild(pInven_d, true);
 	}
-	auto pInven = Sprite::create("Images/inven.png");
+	auto pInven = Sprite::create("inven.png");
 
 	pInven->setPosition(Point(winSize.width * 11 / 16, winSize.height * 11 / 24));
 	pInven->setScaleY(winSize.height / 400);

@@ -15,10 +15,10 @@ bool CharSkill_SKILLMENU::init()
 	
 	Size winSize = Director::getInstance()->getWinSize();
 
-	auto spr_Skill_BG = Sprite::create("images/CharSkill/SkillBG.png");
-	auto Skill_1 = Sprite::create("images/charskill/skill1.png");
-	auto Skill_2 = Sprite::create("images/charskill/skill2.png");
-	auto Skill_3 = Sprite::create("images/charskill/skill3.png");
+	auto spr_Skill_BG = Sprite::create("SkillBG.png");
+	auto Skill_1 = Sprite::create("skill1.png");
+	auto Skill_2 = Sprite::create("skill2.png");
+	auto Skill_3 = Sprite::create("skill3.png");
 
 
 	//Skill _ BG
