@@ -13,10 +13,9 @@ public:
 
 	virtual bool init();
 
-	void KnightButton(Object* pSender);
-	void AssassinButton(Object* pSender);
-	void ArcherButton(Object* pSender);
-	void BackButton(Object* pSender);
+	void charButton(Object* pSender);
+	void backButton(Object* pSender);
+	void selectButton(Object* pSender);
 
 	CREATE_FUNC(SelectChar_MENU);
 };
