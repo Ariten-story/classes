@@ -21,9 +21,9 @@ Scene* GameIntro::createScene()
 	auto layer_BG = GameIntro_BG::create();
 	auto layer_ANI = GameIntro_ANI::create();
 
-	scene->addChild(layer_BG);
-	scene->addChild(layer_MENU);
-	scene->addChild(layer_ANI);
+	scene->addChild(layer_BG,0);
+	scene->addChild(layer_MENU,2);
+	scene->addChild(layer_ANI,1);
 
 	return scene;
 }

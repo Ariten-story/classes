@@ -74,5 +74,6 @@ void CharSlot_MENU::SlotButton3(Object* pSender)
 void CharSlot_MENU::BackButton(Object* pSender)
 {
 	auto pScene = GameIntro::createScene();
+	//Director::getInstance()->popScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }

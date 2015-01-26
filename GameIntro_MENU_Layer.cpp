@@ -51,6 +51,7 @@ void GameIntro_MENU::StartButton(Object* pSender)
 	log("Start click");
 	auto pScene1 = CharSlot::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene1));
+	//Director::getInstance()->pushScene(TransitionFade::create(1.0, pScene1));
 }
 void GameIntro_MENU::OptionButton(Object* pSender)
 {
