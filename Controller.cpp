@@ -1,5 +1,6 @@
 #include "Controller.h"
 #include "Player.h"
+#include "GameIntroScene.h"
 /*
 Controller::Controller()
 {
@@ -32,6 +33,7 @@ bool Controller::init()
 	spriteSkill_3 = Sprite::create("Skill_3.png");
 	spriteSkill_4 = Sprite::create("Skill_3.png");
 
+	spriteCharacter->setPosition(Point(winSize.width / 2, winSize.height / 2));
 	spriteRight->setPosition(Point(winSize.width*0.28, 0));
 	spriteRight->setAnchorPoint(Point(0.5, 0.0));
 	spriteLeft->setPosition(Point(winSize.width*0.14, 0));
@@ -61,7 +63,17 @@ bool Controller::init()
 	this->schedule(schedule_selector(Controller::attackChar));
 	this->schedule(schedule_selector(Controller::skillChar));
 
+	this->setKeypadEnabled(true);
+
 	return true;
+}
+void Controller::onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event *event)
+{
+	if (keycode == EventKeyboard::KeyCode::KEY_BACK)
+	{
+		auto pScene = GameIntro::createScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
+	}
 }
 void Controller::onEnter()
 {

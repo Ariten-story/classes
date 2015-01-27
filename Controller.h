@@ -28,6 +28,7 @@ public:
 	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *event);
+	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event *event);
 
 	void rightMoveChar(float f);
 	void leftMoveChar(float f);
