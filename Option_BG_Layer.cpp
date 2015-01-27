@@ -12,7 +12,7 @@ Option_BG::~Option_BG()
 */
 bool Option_BG::init()
 {
-	if (!LayerColor::initWithColor(Color4B(255, 255, 255, 255)))
+	if (!LayerColor::initWithColor(Color4B(0, 0, 0, 0)))
 	{
 		return false;
 	}

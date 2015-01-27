@@ -13,12 +13,14 @@ GameIntro_ANI::~GameIntro_ANI()
 bool rightselected = false;
 bool leftselected = false;
 
+
 bool GameIntro_ANI::init()
 {
 	if (!LayerColor::initWithColor(Color4B(0, 0, 0, 0)))
 	{
 		return false;
 	}
+
 	Size winSize = Director::getInstance()->getWinSize();
 	rightSprite = Sprite::create("right.png");
 	leftSprite = Sprite::create("left.png");
@@ -136,6 +138,7 @@ void GameIntro_ANI::rightmoveChar(float f)
 		auto posY = parent->getPositionY();
 		posX+=5;
 		parent->setPosition(Point(posX, posY));
+
 	}
 }
 void GameIntro_ANI::leftmoveChar(float f)
