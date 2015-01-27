@@ -4,6 +4,7 @@
 
 USING_NS_CC;
 
+
 Scene* Defence::createScene()
 {
 	auto scene = Scene::create();
@@ -11,9 +12,8 @@ Scene* Defence::createScene()
 	auto layer_BG = Defence_BG::create();
 	auto layer_UI = Defence_UI::create();
 
-	scene->addChild(layer_BG,0,0);
-	scene->addChild(layer_UI,0,1);
+	scene->addChild(layer_BG);
+	scene->addChild(layer_UI);
 
 	return scene;
 }
-

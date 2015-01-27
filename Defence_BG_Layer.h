@@ -10,20 +10,6 @@ public:
 
 	virtual bool init();
 
-	void chbg_direction();//작동 안함
-
 	CREATE_FUNC(Defence_BG);
-
-private:
-	ParallaxNode* node = ParallaxNode::create();
-
-	enum {
-		RIGHT,
-		LEFT,
-		STOP
-	};
-	int state = 0;
-	//state 0 1 2 오른쪽 왼쪽 정지 실험 완료
 };
-
 #endif // __DEFENCE_BG_LAYER_H__
