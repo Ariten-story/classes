@@ -20,7 +20,7 @@ Scene* GameTestScene::createScene()
 	auto layer_controller = Controller::create();
 
 	scene->addChild(layer_BG, 0);
-	scene->addChild(layer_controller, 2);
+	scene->addChild(layer_controller, 1);
 
 	return scene;
 }

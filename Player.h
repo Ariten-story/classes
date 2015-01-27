@@ -7,7 +7,7 @@ private:
 	Player();
 	~Player();
 	static Player* inst;
-	Sprite* PlayerChar;
+	Sprite* playerChar;
 
 public:
 	

@@ -3,7 +3,8 @@
 Player::Player(){}
 Player::~Player(){}
 
-Player* Player::inst = nullptr;
+Player* Player::inst = NULL;
+
 Player* Player::getInstance()
 {
 	if (inst == NULL)
@@ -12,9 +13,10 @@ Player* Player::getInstance()
 }
 void Player::setCharacter(Sprite* character)
 {
-	PlayerChar = character;
+	playerChar = character;
+	playerChar->retain();
 }
 Sprite* Player::getCharacter()
 {
-	return PlayerChar;
+	return playerChar;
 }

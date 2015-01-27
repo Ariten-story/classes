@@ -2,7 +2,7 @@
 #include "CharSlotScene.h"
 #include "INNScene.h"
 #include "Player.h"
-#include "GameTestScene.h" // test후 삭제할것
+#include "GameTestScene.h"
 
 USING_NS_CC;
 
@@ -79,9 +79,9 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[1] = false;
 			clickcheck[2] = false;
 
-			//auto SpriteKnight = Sprite::create("Knight.png");
-			//SpriteKnight->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
-			//SpriteKnight->setTag(11);
+			auto SpriteKnight = Sprite::create("Knight.png");
+			SpriteKnight->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
+			SpriteKnight->setTag(11);
 
 			auto pLabel5 = LabelTTF::create("OK", "fonts/Paint Boy.ttf", FONTSIZE);
 			auto MenuItem5 = MenuItemLabel::create(pLabel5, CC_CALLBACK_1(SelectChar_MENU::selectButton, this));
@@ -94,7 +94,7 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[3] = true;
 
 			this->addChild(okMenu);
-			//this->addChild(SpriteKnight);
+			this->addChild(SpriteKnight);
 
 			log("Knight click");
 		}
@@ -114,9 +114,9 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[1] = true;
 			clickcheck[2] = false;
 
-			//auto SpriteAssassin = Sprite::create("Assassin.png");
-			//SpriteAssassin->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
-			//SpriteAssassin->setTag(12);
+			auto SpriteAssassin = Sprite::create("Assassin.png");
+			SpriteAssassin->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
+			SpriteAssassin->setTag(12);
 
 			auto pLabel5 = LabelTTF::create("OK", "fonts/Paint Boy.ttf", FONTSIZE);
 			auto MenuItem5 = MenuItemLabel::create(pLabel5, CC_CALLBACK_1(SelectChar_MENU::selectButton, this));
@@ -129,7 +129,7 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[3] = true;
 
 			this->addChild(okMenu);
-			//this->addChild(SpriteAssassin);
+			this->addChild(SpriteAssassin);
 
 			log("Assassin click");
 		}
@@ -149,9 +149,9 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[1] = false;
 			clickcheck[2] = true;
 
-			//auto SpriteArcher = Sprite::create("Archer.png");
-			//SpriteArcher->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
-			//SpriteArcher->setTag(13);
+			auto SpriteArcher = Sprite::create("Archer.png");
+			SpriteArcher->setPosition(Point((winSize.width) / 2, (winSize.height) / 2 + 100));
+			SpriteArcher->setTag(13);
 
 			auto pLabel5 = LabelTTF::create("OK", "fonts/Paint Boy.ttf", FONTSIZE);
 			auto MenuItem5 = MenuItemLabel::create(pLabel5, CC_CALLBACK_1(SelectChar_MENU::selectButton, this));
@@ -164,7 +164,7 @@ void SelectChar_MENU::charButton(Object* pSender)
 			clickcheck[3] = true;
 
 			this->addChild(okMenu);
-			//this->addChild(SpriteArcher);
+			this->addChild(SpriteArcher);
 
 			log("Archer click");
 		}
@@ -184,21 +184,19 @@ void SelectChar_MENU::backButton(Object* pSender)
 void SelectChar_MENU::selectButton(Object* pSender)
 {
 	auto player = Player::getInstance();
-	auto Knight = Sprite::create("KnightChar.PNG");
-	player->setCharacter(Knight);
 	if (clickcheck[0] == true)
 	{
-		auto Knight = Sprite::create("KnightChar.PNG");
+		auto Knight = Sprite::create("KnightChar.png");
 		player->setCharacter(Knight);
 	}
 	if (clickcheck[1] == true)
 	{
-		auto Assassin = Sprite::create("KnightChar.PNG");
+		auto Assassin = Sprite::create("KnightChar.png");
 		player->setCharacter(Assassin);
 	}
 	if (clickcheck[2] == true)
 	{
-		auto Archer = Sprite::create("KnightChar.PNG");
+		auto Archer = Sprite::create("KnightChar.png");
 		player->setCharacter(Archer);
 	}
 	for (int i = 0; i < 4; i++)
@@ -206,6 +204,6 @@ void SelectChar_MENU::selectButton(Object* pSender)
 		clickcheck[i] = false;
 	}
 	log("OK click");
-	auto *pScene = GameTestScene::createScene(); //test후 수정할것
+	auto *pScene = INN::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }
