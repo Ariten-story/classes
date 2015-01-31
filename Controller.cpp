@@ -32,7 +32,7 @@ bool Controller::init()
 	spriteSkill_2 = Sprite::create("Skill_2.png");
 	spriteSkill_3 = Sprite::create("Skill_3.png");
 	spriteSkill_4 = Sprite::create("Skill_3.png");
-
+	
 	spriteCharacter->setPosition(Point(winSize.width / 2, winSize.height / 2));
 	spriteRight->setPosition(Point(winSize.width*0.28, 0));
 	spriteRight->setAnchorPoint(Point(0.5, 0.0));
@@ -58,6 +58,25 @@ bool Controller::init()
 	this->addChild(spriteSkill_3);
 	this->addChild(spriteSkill_4);
 	
+
+	//////Test용. Test후 삭제할 것.
+	enemy = Sprite::create("grossini.png");
+	enemy->setPosition(Point(winSize.width / 3, winSize.height / 2));
+	this->addChild(enemy);
+
+	auto hpBar = Sprite::create("white-512x512.png");
+	hpBar->setTextureRect(Rect(0, 0, 50, 5));
+	hpBar->setColor(Color3B::RED);
+	Size parentSize = spriteCharacter->getContentSize();
+	hpBar->setPosition(Point(parentSize.width / 2.0, parentSize.height + 10));
+	spriteCharacter->addChild(hpBar);
+
+	sworld = Sprite::create("sword.png");
+	sworld->setAnchorPoint(Point(0.5, 0.0));
+	sworld->setPosition(Point(30, (parentSize.height / 2.0) - 25.0));
+	spriteCharacter->addChild(sworld);
+	//////<-여기까지 Test
+
 	this->schedule(schedule_selector(Controller::rightMoveChar));
 	this->schedule(schedule_selector(Controller::leftMoveChar));
 	this->schedule(schedule_selector(Controller::attackChar));
@@ -78,14 +97,15 @@ void Controller::onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d:
 void Controller::onEnter()
 {
 	Layer::onEnter();
+	
 	auto listener = EventListenerTouchOneByOne::create();
-
+	
 	listener->setSwallowTouches(true);
 
 	listener->onTouchBegan = CC_CALLBACK_2(Controller::onTouchBegan, this);
 	listener->onTouchMoved = CC_CALLBACK_2(Controller::onTouchMoved, this);
 	listener->onTouchEnded = CC_CALLBACK_2(Controller::onTouchEnded, this);
-
+	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
 void Controller::onExit()
@@ -261,6 +281,10 @@ void Controller::attackChar(float f)
 	if (selected[2])
 	{
 		log("Attack!");
+		RotateTo* attack = RotateTo::create(0.5, -130);
+		RotateBy* reverseAttack = RotateBy::create(0.5, 130);
+		auto action = Sequence::create(attack, reverseAttack, NULL);
+		sworld->runAction(action);
 	}
 }
 void Controller::skillChar(float f)
@@ -282,4 +306,3 @@ void Controller::skillChar(float f)
 		log("Skill_4!");
 	}
 }
-
