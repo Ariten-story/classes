@@ -9,7 +9,6 @@ class Defence : public cocos2d::LayerColor
 public:
 	static cocos2d::Scene* createScene();
 
-
 	CREATE_FUNC(Defence);
 };
 
