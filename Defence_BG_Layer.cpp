@@ -9,68 +9,73 @@ bool Defence_BG::init()
 		return false;
 	}
 	//add PARALLAXNODE
-	this->addChild(node);
+	//this->addChild(node);
+	Size winSize = Director::getInstance()->getWinSize();
+	//배경 좌표 카운터..
+	bg_pos = -SPEED;
+	//배경 좌표 카운터..
 
-	//후경
-	auto spr_0 = Sprite::create("bg1.png");
-	spr_0->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_0, 0, Point(1, 0), Point::ZERO);
-	
-	auto spr_0_1 = Sprite::create("bg1.png");
+	//BG
+	spr_0_0->setAnchorPoint(Point::ZERO);
+	spr_0_0->setPosition(Point(0, 0));
+	spr_0_0->setScaleY(winSize.height / spr_0_0->getContentSize().height);
+	spr_0_0->setScaleX(winSize.width / spr_0_0->getContentSize().width);
+	this->addChild(spr_0_0);
+
 	spr_0_1->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_0_1, 0, Point(1, 0), Point(1280, 0));
-	
-	auto spr_0_2 = Sprite::create("bg1.png");
-	spr_0_2->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_0_2, 0, Point(1, 0), Point(-1280, 0));
-	//후경
-	//전경
-	auto spr_2 = Sprite::create("bg2.png");
-	spr_2->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_2, 1, Point(2, 0), Point::ZERO);
-	
-	auto spr_2_1 = Sprite::create("bg2.png");
-	spr_2_1->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_2_1, 1, Point(2, 0), Point(1280, 0));
+	spr_0_1->setPosition(Point(winSize.width, 0));
+	spr_0_1->setScaleY(winSize.height / spr_0_1->getContentSize().height);
+	spr_0_1->setScaleX(winSize.width / spr_0_1->getContentSize().width);
+	this->addChild(spr_0_1);
+	//BG
+	//FG
+	spr_1_0->setAnchorPoint(Point::ZERO);
+	spr_1_0->setPosition(Point(0, 0));
+	spr_1_0->setScaleX(winSize.width / spr_1_0->getContentSize().width);
+	this->addChild(spr_1_0);
 
-	auto spr_2_2 = Sprite::create("bg2.png");
-	spr_2_2->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_2_2, 1, Point(2, 0), Point(2560, 0));
+	spr_1_1->setAnchorPoint(Point::ZERO);
+	spr_1_1->setPosition(Point(winSize.width, 0));
+	spr_1_1->setScaleX(winSize.width / spr_1_1->getContentSize().width);
+	this->addChild(spr_1_1);
 
-	auto spr_2_3 = Sprite::create("bg2.png");
-	spr_2_3->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_2_3, 1, Point(2, 0), Point(-1280, 0));
-
-	auto spr_2_4 = Sprite::create("bg2.png");
-	spr_2_4->setAnchorPoint(Point::ZERO);
-	node->addChild(spr_2_4, 1, Point(2, 0), Point(-2560, 0));
-	//전경	
-	
-	
-
+	spr_1_2->setAnchorPoint(Point::ZERO);
+	spr_1_2->setPosition(Point(winSize.width*2, 0));
+	spr_1_2->setScaleX(winSize.width / spr_1_2->getContentSize().width);
+	this->addChild(spr_1_2);
+	//FG
 	return true;
 }
-void Defence_BG::chbg_direction(){
-	state = (state + 1) % 3;
-	log("%d", state);
-	if (state == RIGHT){
-		node->stopAllActions();
-		auto action_0 = MoveBy::create(10.0, Point(-1280, 0));//right
-		auto action_1 = Place::create(Point::ZERO);
-		auto action_2 = Sequence::create(action_0, action_1, NULL);
-		auto action_3 = RepeatForever::create(action_2);
-		node->runAction(action_3);
+void Defence_BG::chbg_Left(){
+	
+	if (bg_pos < -5){
+		bg_pos += SPEED;
+		//BG
+		spr_0_0->setPosition(Point(spr_0_0->getPositionX() + SPEED, spr_0_0->getPositionY()));
+		spr_0_1->setPosition(Point(spr_0_1->getPositionX() + SPEED, spr_0_1->getPositionY()));
+		//BG
+		//FG
+		spr_1_0->setPosition(Point(spr_1_0->getPositionX() + SPEED*2, spr_1_0->getPositionY()));
+		spr_1_1->setPosition(Point(spr_1_1->getPositionX() + SPEED*2, spr_1_1->getPositionY()));
+		spr_1_2->setPosition(Point(spr_1_2->getPositionX() + SPEED*2, spr_1_2->getPositionY()));
+		//FG
 	}
-	else if (state == LEFT){
-		node->stopAllActions();
-		auto action_0 = MoveBy::create(10.0, Point(1280, 0));//left
-		auto action_1 = Place::create(Point::ZERO);
-		auto action_2 = Sequence::create(action_0, action_1, NULL);
-		auto action_3 = RepeatForever::create(action_2);
-		node->runAction(action_3);
-	}
-	else if (state == STOP){
-		node->stopAllActions();
-	}
+	log("%d", bg_pos);
+}
 
+void Defence_BG::chbg_Right(){
+	
+	if (bg_pos > -1280){
+		bg_pos -= SPEED;
+		//BG
+		spr_0_0->setPosition(Point(spr_0_0->getPositionX() - SPEED, spr_0_0->getPositionY()));
+		spr_0_1->setPosition(Point(spr_0_1->getPositionX() - SPEED, spr_0_1->getPositionY()));
+		//BG
+		//FG
+		spr_1_0->setPosition(Point(spr_1_0->getPositionX() - SPEED * 2, spr_1_0->getPositionY()));
+		spr_1_1->setPosition(Point(spr_1_1->getPositionX() - SPEED * 2, spr_1_1->getPositionY()));
+		spr_1_2->setPosition(Point(spr_1_2->getPositionX() - SPEED * 2, spr_1_2->getPositionY()));
+		//FG
+	}
+	log("%d", bg_pos);
 }

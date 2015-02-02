@@ -8,7 +8,7 @@ bool Defence_Monster::init()
 	{
 		return false;
 	}
-
+	
 	Size winSize = Director::getInstance()->getWinSize();
 	
 	
@@ -37,13 +37,13 @@ bool Defence_Monster::init()
 	this->scheduleUpdate();
 	this->schedule(schedule_selector(Defence_Monster::setMonster), 5.0);
 	
-
+	
 	return true;
 }
 
 void Defence_Monster::setMonster(float delta)
 {
-
+	
 	Size winSize = Director::getInstance()->getWinSize();
 
 	auto spr_Monster1 = Sprite::create("Monster1.png");

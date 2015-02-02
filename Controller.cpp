@@ -258,6 +258,7 @@ void Controller::onTouchCancelled(Touch* touch, Event* event)
 }
 void Controller::rightMoveChar(float f)
 {
+	/*
 	if (selected[1])
 	{
 		auto posX = spriteCharacter->getPositionX();
@@ -265,15 +266,28 @@ void Controller::rightMoveChar(float f)
 		posX += 5;
 		spriteCharacter->setPosition(Point(posX, posY));
 	}
+	*/
+	if (selected[1]){
+		pDefence_bg = dynamic_cast<Defence_BG*>(getParent()->getChildByTag(0));
+		//부모 포인터에서 자식중에 태그가 0인 bg 포인터 받아와서
+		pDefence_bg->chbg_Right();
+	}
 }
 void Controller::leftMoveChar(float f)
 {
+	/*
 	if (selected[0])
 	{
 		auto posX = spriteCharacter->getPositionX();
 		auto posY = spriteCharacter->getPositionY();
 		posX -= 5;
 		spriteCharacter->setPosition(Point(posX, posY));
+	}
+	*/
+	if (selected[0]){
+		pDefence_bg = dynamic_cast<Defence_BG*>(getParent()->getChildByTag(0));
+		//부모 포인터에서 자식중에 태그가 0인 bg 포인터 받아와서
+		pDefence_bg->chbg_Left();
 	}
 }
 void Controller::attackChar(float f)

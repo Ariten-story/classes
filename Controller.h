@@ -1,6 +1,7 @@
 #ifndef __CONTROLLER_H__
 #define __CONTROLLER_H__
 
+#include "Defence_BG_Layer.h"
 #include "cocos2d.h"
 using namespace cocos2d;
 
@@ -15,6 +16,7 @@ public:
 
 	Sprite* spriteCharacter;
 	Sprite* sworld; //Test용. Test후 삭제할것.
+	Sprite* enemy;
 	Sprite* spriteRight;
 	Sprite* spriteLeft;
 	Sprite* spriteAttack;
@@ -37,5 +39,7 @@ public:
 	void skillChar(float f);
 
 	CREATE_FUNC(Controller);
+private:
+	Defence_BG* pDefence_bg;
 };
 #endif // __CONTROLLER_H__
