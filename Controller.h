@@ -15,6 +15,7 @@ public:
 
 	Sprite* spriteCharacter;
 	Sprite* sworld; //Test용. Test후 삭제할것.
+	Sprite* enemy;
 	Sprite* spriteRight;
 	Sprite* spriteLeft;
 	Sprite* spriteAttack;
