@@ -11,12 +11,7 @@ public:
 
 	virtual bool init();
 
-	void Rudder(Object* pSender);
-
 	CREATE_FUNC(Defence_UI);
-
-private:
-	Defence_BG* pDefence_bg;
 
 };
 #endif // __DEFENCE_UI_LAYER_H__

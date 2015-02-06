@@ -27,9 +27,9 @@ public:
 	//~Controller();
 
 	virtual bool init();
-	
+
 	void createButtons();
-	
+
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);

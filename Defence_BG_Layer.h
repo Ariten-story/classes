@@ -4,26 +4,26 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
+#define SPEED 5
+
 class Defence_BG : public cocos2d::LayerColor
 {
 public:
 
 	virtual bool init();
 
-	void chbg_direction();//작동 안함
+	void chbg_Right();//오른쪽으로 이동
+	void chbg_Left();//왼쪽으로 이동
 
 	CREATE_FUNC(Defence_BG);
 
 private:
-	ParallaxNode* node = ParallaxNode::create();
-
-	enum {
-		RIGHT,
-		LEFT,
-		STOP
-	};
-	int state = 0;
-	//state 0 1 2 오른쪽 왼쪽 정지 실험 완료
+	int bg_pos ;
+	Sprite* spr_0_0 = Sprite::create("bg1.png");
+	Sprite* spr_0_1 = Sprite::create("bg1.png");
+	Sprite* spr_1_0 = Sprite::create("bg2.png");
+	Sprite* spr_1_1 = Sprite::create("bg2.png");
+	Sprite* spr_1_2 = Sprite::create("bg2.png");
 };
 
 #endif // __DEFENCE_BG_LAYER_H__

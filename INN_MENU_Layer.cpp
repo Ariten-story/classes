@@ -77,7 +77,7 @@ void INN_MENU::ShopButton(Object* pSender)
 void INN_MENU::MissionStartButton(Object* pSender)
 {
 	log("Mission click");
-	auto *pScene = GameTestScene::createScene();
+	auto *pScene = Defence::createScene();
 	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }
 

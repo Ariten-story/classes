@@ -206,7 +206,6 @@ void Controller::onTouchEnded(Touch* touch, Event* event)
 		this->stopAttackCharacter();
 	}
 }
-
  // 터치 확인.
 bool Controller::isTouchInside(cocos2d::Sprite* sprite, cocos2d::Touch* touch)
 {
