@@ -2,17 +2,11 @@
 #include "Player.h"
 #include "GameIntroScene.h"
 /*
-Controller::Controller()
-{
-}
-Controller::~Controller()
-{
-}
+Controller::Controller(){}
+Controller::~Controller(){}
 */
 
 USING_NS_CC;
-
-bool selected[7] = { false, false, false, false, false, false, false }; //왼쪽, 오른쪽, 공격, 스킬1, 스킬2, 스킬3, 스킬4
 
 bool Controller::init()
 {
@@ -20,72 +14,60 @@ bool Controller::init()
 	{
 		return false;
 	}
-	//Director::getInstance()->getTextureCache()->removeUnusedTextures();//현재 사용하지않는 texture 전부 삭제.
+	// 현재 사용하지않는 texture 전부 삭제.
+	//Director::getInstance()->getTextureCache()->removeUnusedTextures();
 
-	Size winSize = Director::getInstance()->getWinSize();
+	winSize = Director::getInstance()->getWinSize();
 	
-	spriteCharacter = Player::getInstance()->getCharacter();
-	spriteRight = Sprite::create("right.png");
-	spriteLeft = Sprite::create("left.png");
-	spriteAttack = Sprite::create("Attack.png");
-	spriteSkill_1 = Sprite::create("Skill_1.png");
-	spriteSkill_2 = Sprite::create("Skill_2.png");
-	spriteSkill_3 = Sprite::create("Skill_3.png");
-	spriteSkill_4 = Sprite::create("Skill_3.png");
+	this->createButtons();
 	
-	spriteCharacter->setPosition(Point(winSize.width / 2, winSize.height / 2));
-	spriteRight->setPosition(Point(winSize.width*0.28, 0));
-	spriteRight->setAnchorPoint(Point(0.5, 0.0));
-	spriteLeft->setPosition(Point(winSize.width*0.14, 0));
-	spriteLeft->setAnchorPoint(Point(0.5, 0.0));
-	spriteAttack->setPosition(Point(winSize.width*0.42, 0));
-	spriteAttack->setAnchorPoint(Point(0.5, 0.0));
-	spriteSkill_1->setPosition(Point(winSize.width*0.56, 0));
-	spriteSkill_1->setAnchorPoint(Point(0.5, 0.0));
-	spriteSkill_2->setPosition(Point(winSize.width*0.7, 0));
-	spriteSkill_2->setAnchorPoint(Point(0.5, 0.0));
-	spriteSkill_3->setPosition(Point(winSize.width*0.84, 0));
-	spriteSkill_3->setAnchorPoint(Point(0.5, 0.0));
-	spriteSkill_4->setPosition(Point(winSize.width*0.95, 0));
-	spriteSkill_4->setAnchorPoint(Point(0.5, 0.0));
-
-	this->addChild(spriteCharacter);
-	this->addChild(spriteRight);
-	this->addChild(spriteLeft);
-	this->addChild(spriteAttack);
-	this->addChild(spriteSkill_1);
-	this->addChild(spriteSkill_2);
-	this->addChild(spriteSkill_3);
-	this->addChild(spriteSkill_4);
-	
-
-	//////Test용. Test후 삭제할 것.
-	enemy = Sprite::create("grossini.png");
-	enemy->setPosition(Point(winSize.width / 3, winSize.height / 2));
-	this->addChild(enemy);
-
-	auto hpBar = Sprite::create("white-512x512.png");
-	hpBar->setTextureRect(Rect(0, 0, 50, 5));
-	hpBar->setColor(Color3B::RED);
-	Size parentSize = spriteCharacter->getContentSize();
-	hpBar->setPosition(Point(parentSize.width / 2.0, parentSize.height + 10));
-	spriteCharacter->addChild(hpBar);
-
-	sworld = Sprite::create("sword.png");
-	sworld->setAnchorPoint(Point(0.5, 0.0));
-	sworld->setPosition(Point(30, (parentSize.height / 2.0) - 25.0));
-	spriteCharacter->addChild(sworld);
-	//////<-여기까지 Test
-
-	this->schedule(schedule_selector(Controller::rightMoveChar));
-	this->schedule(schedule_selector(Controller::leftMoveChar));
-	this->schedule(schedule_selector(Controller::attackChar));
-	this->schedule(schedule_selector(Controller::skillChar));
-
 	this->setKeypadEnabled(true);
 
 	return true;
 }
+
+ // 버튼 생성
+void Controller::createButtons()
+{
+	characterSprite = Player::getInstance()->getCharacter();
+	rightSprite = Sprite::create("right.png");
+	leftSprite = Sprite::create("left.png");
+	attackSprite = Sprite::create("Attack.png");
+	skillSprite[0] = Sprite::create("Skill_1.png");
+	skillSprite[1] = Sprite::create("Skill_2.png");
+	skillSprite[2] = Sprite::create("Skill_3.png");
+	skillSprite[3] = Sprite::create("Skill_3.png");
+
+	rightSprite->setPosition(Point(winSize.width*0.28, 0));
+	rightSprite->setAnchorPoint(Point(0.5, 0.0));
+	leftSprite->setPosition(Point(winSize.width*0.14, 0));
+	leftSprite->setAnchorPoint(Point(0.5, 0.0));
+	attackSprite->setPosition(Point(winSize.width*0.42, 0));
+	attackSprite->setAnchorPoint(Point(0.5, 0.0));
+	attackSprite->setTag(0);
+	skillSprite[0]->setPosition(Point(winSize.width*0.56, 0));
+	skillSprite[0]->setAnchorPoint(Point(0.5, 0.0));
+	skillSprite[0]->setTag(1);
+	skillSprite[1]->setPosition(Point(winSize.width*0.7, 0));
+	skillSprite[1]->setAnchorPoint(Point(0.5, 0.0));
+	skillSprite[1]->setTag(2);
+	skillSprite[2]->setPosition(Point(winSize.width*0.84, 0));
+	skillSprite[2]->setAnchorPoint(Point(0.5, 0.0));
+	skillSprite[2]->setTag(3);
+	skillSprite[3]->setPosition(Point(winSize.width*0.95, 0));
+	skillSprite[3]->setAnchorPoint(Point(0.5, 0.0));
+	skillSprite[3]->setTag(4);
+	
+	this->addChild(rightSprite);
+	this->addChild(leftSprite);
+	this->addChild(attackSprite);
+	for (int i = 0; i < 4; i++)
+	{
+		this->addChild(skillSprite[i]);
+	}
+}
+
+ // 안드로이드 Back버튼 활성화
 void Controller::onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event *event)
 {
 	if (keycode == EventKeyboard::KeyCode::KEY_BACK)
@@ -94,6 +76,8 @@ void Controller::onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d:
 		Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 	}
 }
+
+ // 터치 이벤트 등록
 void Controller::onEnter()
 {
 	Layer::onEnter();
@@ -108,201 +92,188 @@ void Controller::onEnter()
 	
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
-void Controller::onExit()
+
+ // 터치 해제
+void Controller::onExit() 
 {
 	_eventDispatcher->removeEventListenersForTarget(this);
 
 	Layer::onExit();
 }
-bool Controller::onTouchBegan(Touch* touch, Event* event)
+
+
+bool Controller::onTouchBegan(Touch* touch, Event* event) // 터치 시작시
 {
-	auto touchPoint = touch->getLocation();
-	log("onTouchBegan id = %d, x =%f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
-	
-	bool rightTouch = spriteRight->getBoundingBox().containsPoint(touchPoint);
-	bool leftTouch = spriteLeft->getBoundingBox().containsPoint(touchPoint);
-	bool attackTouch = spriteAttack->getBoundingBox().containsPoint(touchPoint);
-	bool skill1Touch = spriteSkill_1->getBoundingBox().containsPoint(touchPoint);
-	bool skill2Touch = spriteSkill_2->getBoundingBox().containsPoint(touchPoint);
-	bool skill3Touch = spriteSkill_3->getBoundingBox().containsPoint(touchPoint);
-	bool skill4Touch = spriteSkill_4->getBoundingBox().containsPoint(touchPoint);
-	
-	if (rightTouch)
+	isLeftPressed = false;
+	isRightPressed = false;
+	isAttackPressed = false;
+	isSkillPressed = false;
+
+	 // 터치가 어느 버튼안에 들어갔는지 체크
+	if (this->isTouchInside(leftSprite, touch) == true) 
 	{
-		log("spriteRight clicked...");
-		selected[1] = true;
+		isLeftPressed = true;
 	}
-	if (leftTouch)
+	else if (this->isTouchInside(rightSprite, touch) == true)
 	{
-		log("spriteLeft clicked...");
-		selected[0] = true;
+		isRightPressed = true;
 	}
-	if (attackTouch)
+	else if (this->isTouchInside(attackSprite, touch) == true)
 	{
-		log("spriteAttack clicked...");
-		selected[2] = true;
+		isAttackPressed = true;
 	}
-	if (skill1Touch)
+	else 
 	{
-		log("spriteSkill_1 clicked...");
-		selected[3] = true;
+		for (int i = 0; i < 4; i++)
+		{
+			if (this->isTouchInside(skillSprite[i], touch) == true)
+				isSkillPressed = true;
+		}
 	}
-	if (skill2Touch)
+
+	 // 버튼이 눌러졌으면 실행.
+	if (isLeftPressed == true || isRightPressed == true)
 	{
-		log("spriteSkill_2 clicked...");
-		selected[4] = true;
+		this->startMovingCharacter();
 	}
-	if (skill3Touch)
+	if (isAttackPressed == true || isSkillPressed == true)
 	{
-		log("spriteSkill_3 clicked...");
-		selected[5] = true;
+		this->startAttackCharacter();
 	}
-	if (skill4Touch)
-	{
-		log("spriteSkill_4 clicked...");
-		selected[6] = true;
-	}
-	
+
 	return true;
 }
+
+ // 터치 중
 void Controller::onTouchMoved(Touch* touch, Event* event)
 {
-	auto touchPoint = touch->getLocation();
-
-	log("onTouchMoved id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
-	
-	bool rightTouch = spriteRight->getBoundingBox().containsPoint(touchPoint);
-	bool leftTouch = spriteLeft->getBoundingBox().containsPoint(touchPoint);
-	bool attackTouch = spriteAttack->getBoundingBox().containsPoint(touchPoint);
-	bool skill1Touch = spriteSkill_1->getBoundingBox().containsPoint(touchPoint);
-	bool skill2Touch = spriteSkill_2->getBoundingBox().containsPoint(touchPoint);
-	bool skill3Touch = spriteSkill_3->getBoundingBox().containsPoint(touchPoint);
-	bool skill4Touch = spriteSkill_4->getBoundingBox().containsPoint(touchPoint);
-
-	if (rightTouch)
+	 // 왼쪽 터치 체크
+	if (isLeftPressed == true && this->isTouchInside(leftSprite, touch) == false)
 	{
-		log("spriteRight clicked...");
-		selected[1] = true;
+		isLeftPressed = false;
+		this->stopMovingCharacter();
 	}
-	else
+	else if (isLeftPressed == false && this->isTouchInside(leftSprite, touch) == true)
 	{
-		selected[1] = false;
+		isLeftPressed = true;
+		this->startMovingCharacter();
 	}
-	if (leftTouch)
+	 // 오른쪽 터치 체크
+	if (isRightPressed == true && this->isTouchInside(rightSprite, touch) == false)
 	{
-		log("spriteLeft clicked...");
-		selected[0] = true;
+		isRightPressed = false;
+		this->stopMovingCharacter();
 	}
-	else
+	else if (isRightPressed == false && this->isTouchInside(rightSprite, touch) == true)
 	{
-		selected[0] = false;
+		isRightPressed = true;
+		this->startMovingCharacter();
 	}
-	if (attackTouch)
+	 // 공격 터치 체크
+	if (isAttackPressed == true && this->isTouchInside(attackSprite, touch) == false)
 	{
-		log("spriteAttack clicked...");
-		selected[2] = true;
+		isAttackPressed = false;
+		this->stopAttackCharacter();
 	}
-	else
+	 // 스킬 터치 체크
+	if (isSkillPressed == true)
 	{
-		selected[2] = false;
+		for (int i = 0; i < 4; i++)
+		{
+			if (this->isTouchInside(skillSprite[i], touch) == false)
+			{
+				isSkillPressed = false;
+				this->stopAttackCharacter();
+			}
+		}
 	}
-	if (skill1Touch)
-	{
-		log("spriteSkill_1 clicked...");
-		selected[3] = true;
-	}
-	else
-	{
-		selected[3] = false;
-	}
-	if (skill2Touch)
-	{
-		log("spriteSkill_2 clicked...");
-		selected[4] = true;
-	}
-	else
-	{
-		selected[4] = false;
-	}
-	if (skill3Touch)
-	{
-		log("spriteSkill_3 clicked...");
-		selected[5] = true;
-	}
-	else
-	{
-		selected[5] = false;
-	}
-	if (skill4Touch)
-	{
-		log("spriteSkill_4 clicked...");
-		selected[6] = true;
-	}
-	else
-	{
-		selected[6] = false;
-	}
-	
 }
+
+ // 터치 종료
 void Controller::onTouchEnded(Touch* touch, Event* event)
 {
+	 //움직임 & 공격 종료.
+	if (isLeftPressed == true || isRightPressed == true)
+	{
+		isLeftPressed = false;
+		isRightPressed = false;
+		this->stopMovingCharacter();
+	}
+	else if (isAttackPressed == true || isSkillPressed == true)
+	{
+		isAttackPressed = false;
+		isSkillPressed = false;
+		this->stopAttackCharacter();
+	}
+}
+
+ // 터치 확인.
+bool Controller::isTouchInside(cocos2d::Sprite* sprite, cocos2d::Touch* touch)
+{
 	auto touchPoint = touch->getLocation();
-	log("onTouchMoved id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
-	for (int i = 0; i < 7; i++)
-	{
-		selected[i] = false;
-	}
+	bool bTouch = sprite->getBoundingBox().containsPoint(touchPoint);
+	return bTouch;
 }
-void Controller::onTouchCancelled(Touch* touch, Event* event)
+
+ // 캐릭터 이동시작.
+void Controller::startMovingCharacter()
 {
+	log("Start moving");
+	this->schedule(schedule_selector(Controller::moveCharacter));
 }
-void Controller::rightMoveChar(float f)
+
+ // 캐릭터 이동종료.
+void Controller::stopMovingCharacter()
 {
-	if (selected[1])
-	{
-		auto posX = spriteCharacter->getPositionX();
-		auto posY = spriteCharacter->getPositionY();
-		posX += 5;
-		spriteCharacter->setPosition(Point(posX, posY));
-	}
+	log("Stop moving");
+	this->unschedule(schedule_selector(Controller::moveCharacter));
 }
-void Controller::leftMoveChar(float f)
+
+ // 캐릭터 이동구현
+void Controller::moveCharacter(float t)
 {
-	if (selected[0])
+	auto moveStep = 5;
+	if (isLeftPressed == true)
 	{
-		auto posX = spriteCharacter->getPositionX();
-		auto posY = spriteCharacter->getPositionY();
-		posX -= 5;
-		spriteCharacter->setPosition(Point(posX, posY));
+		moveStep = -5;
+		characterSprite->setFlippedX(false);
 	}
+	else
+	{
+		moveStep = 5;
+		characterSprite->setFlippedX(true);
+	}
+
+	auto newPos = Point(characterSprite->getPosition().x + moveStep, characterSprite->getPosition().y);
+
+	if (newPos.x < 0)
+	{
+		newPos.x = 0;
+	}
+	else if (newPos.x > 1280 * 2)
+	{
+		newPos.x = 1280 * 2;
+	}
+
+	characterSprite->setPosition(newPos);
 }
-void Controller::attackChar(float f)
+
+ // 캐릭터 공격시작.
+void Controller::startAttackCharacter()
 {
-	if (selected[2])
-	{
-		log("Attack!");
-		RotateTo* attack = RotateTo::create(0.5, -130);
-		RotateBy* reverseAttack = RotateBy::create(0.5, 130);
-		auto action = Sequence::create(attack, reverseAttack, NULL);
-		sworld->runAction(action);
-	}
+	log("Start Attack");
+	this->schedule(schedule_selector(Controller::attackCharacter), 0.6f);
 }
-void Controller::skillChar(float f)
+
+ // 캐릭터 공격종료.
+void Controller::stopAttackCharacter()
 {
-	if (selected[3])
-	{
-		log("Skill_1!");
-	}
-	else if (selected[4])
-	{
-		log("Skill_2!");
-	}
-	else if (selected[5])
-	{
-		log("Skill_3!");
-	}
-	else if (selected[6])
-	{
-		log("Skill_4!");
-	}
+	log("Stop Attack");
+	this->unschedule(schedule_selector(Controller::attackCharacter));
+}
+
+ // 캐릭터 공격구현
+void Controller::attackCharacter(float t)
+{
+	log("Attack");
 }

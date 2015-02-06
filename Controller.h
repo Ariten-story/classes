@@ -6,36 +6,46 @@ using namespace cocos2d;
 
 class Controller : public cocos2d::LayerColor
 {
+private:
+	Sprite* characterSprite;
+	Sprite* rightSprite;
+	Sprite* leftSprite;
+	Sprite* attackSprite;
+	Sprite* skillSprite[4];
+
+	Sprite* sworld; //Test용. Test후 삭제할것.
+
+	Size winSize;
+	bool isLeftPressed;
+	bool isRightPressed;
+	bool isAttackPressed;
+	bool isSkillPressed;
+	
 public:
 
 	//Controller();
 	//~Controller();
 
 	virtual bool init();
-
-	Sprite* spriteCharacter;
-	Sprite* sworld; //Test용. Test후 삭제할것.
-	Sprite* enemy;
-	Sprite* spriteRight;
-	Sprite* spriteLeft;
-	Sprite* spriteAttack;
-	Sprite* spriteSkill_1;
-	Sprite* spriteSkill_2;
-	Sprite* spriteSkill_3;
-	Sprite* spriteSkill_4;
-
+	
+	void createButtons();
+	
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
-	virtual void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event *event);
 	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event *event);
 	
-	void rightMoveChar(float f);
-	void leftMoveChar(float f);
-	void attackChar(float f);
-	void skillChar(float f);
+	bool isTouchInside(cocos2d::Sprite* sprite, cocos2d::Touch* touch);
+
+	void startMovingCharacter();
+	void stopMovingCharacter();
+	void moveCharacter(float t);
+	
+	void startAttackCharacter();
+	void stopAttackCharacter();
+	void attackCharacter(float t);
 
 	CREATE_FUNC(Controller);
 };

@@ -187,17 +187,17 @@ void SelectChar_MENU::selectButton(Object* pSender)
 	if (clickcheck[0] == true)
 	{
 		auto Knight = Sprite::create("KnightChar.png");
-		player->setCharacter(Knight);
+		player->createCharacter(Knight);
 	}
 	if (clickcheck[1] == true)
 	{
 		auto Assassin = Sprite::create("KnightChar.png");
-		player->setCharacter(Assassin);
+		player->createCharacter(Assassin);
 	}
 	if (clickcheck[2] == true)
 	{
 		auto Archer = Sprite::create("KnightChar.png");
-		player->setCharacter(Archer);
+		player->createCharacter(Archer);
 	}
 	for (int i = 0; i < 4; i++)
 	{
