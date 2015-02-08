@@ -33,6 +33,7 @@ bool GameMaker::init()
 	backgroundLayer->runAction(Follow::create(characterSprite, Rect(0, 0, 1280 * 2, 720)));
 	this->schedule(schedule_selector(GameMaker::createMonster), 3.0f);
 	this->schedule(schedule_selector(GameMaker::checkCollision));
+	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
 
 	return true;
 }
@@ -297,6 +298,23 @@ void GameMaker::attackCharacter(float t)
 	this->createWeapon();
 }
 
+//배경을 만드는 함수.
+void GameMaker::createBackgroundParallax()
+{
+	//스테이지 배경 생성. ->player의 stage정보이용.
+	Background* background = Background::creaeteWithType(0);
+	//ParallaxNode 받기.
+	auto voidNode = background->getParallaxNode();
+	//ParallaxNode 추가.
+	backgroundLayer->addChild(voidNode, 0);
+}
+
+// 플레이어 위치 설정 함수.
+void GameMaker::setPositionPlayer()
+{
+	characterSprite = Player::getInstance()->getCharacter();
+	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
+}
 
 // 무기 생성위치 지정.
 void GameMaker::setFirstPositionWeapon(Sprite* sprite)
@@ -375,24 +393,6 @@ void GameMaker::WeaponRemover(Node* sender)
 	}
 }
 
-//배경을 만드는 함수.
-void GameMaker::createBackgroundParallax()
-{
-	//스테이지 배경 생성. ->player의 stage정보이용.
-	background = Background::creaeteWithType(0);
-	//ParallaxNode 받기.
-	auto voidNode = background->getParallaxNode();
-	//ParallaxNode 추가.
-	backgroundLayer->addChild(voidNode, 0);
-}
-
-// 플레이어 위치 설정 함수.
-void GameMaker::setPositionPlayer()
-{
-	characterSprite = Player::getInstance()->getCharacter();
-	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
-}
-
 // 몬스터 생성위치 지정.
 void GameMaker::setFirstPositionMonster(Sprite* sprite)
 {
@@ -409,13 +409,17 @@ void GameMaker::setFirstPositionMonster(Sprite* sprite)
 // 몬스터 생성.
 void GameMaker::createMonster(float t)
 {
+	//Type별 몬스터 생성.
 	Monster* monster = Monster::createWithType(0);
-
+	//몬스터 최초위치 설정.
 	this->setFirstPositionMonster(monster->getMonsterBody());
+	//거리,시간 계산.
 	float distance = monster->getMonsterBody()->getPositionX();
 	float movetime = distance / monster->getSpeedOfMove();
+	//액션주기 & 벡터에 저장.
 	this->moveToCastle(monster->getMonsterBody(), movetime);
 	this->addMonsterList(monster);
+	//레이어에 추가.
 	backgroundLayer->addChild(monster->getMonsterBody());
 }
 
@@ -470,6 +474,15 @@ void GameMaker::moveToPlayer(Sprite* sprite, float movetime)
 	sprite->runAction(sequence);
 }
 
+//캐릭터 피해발생시 움직임.
+void GameMaker::jumpToBack(Sprite* sprite, Point newPos)
+{
+	JumpBy* jumpBy = JumpBy::create(1, newPos, 20, 1);
+	CallFuncN* callfunc = CallFuncN::create(CC_CALLBACK_0(GameMaker::onCharacterCollision, this));
+	Sequence* sequence = Sequence::create(jumpBy, callfunc, NULL);
+	sprite->runAction(sequence);
+}
+
 //무기와 몬스터 충돌 검사
 void GameMaker::checkCollision(float t)
 {
@@ -491,6 +504,7 @@ void GameMaker::checkCollision(float t)
 				bHit = true;
 				if (0 >= monster->subEnergy(weapon->getDamage()))
 				{
+					log("%f", monster->subEnergy(0));
 					monster->release();
 					delete monster;
 					iterMonster = arrMonster.erase(iterMonster);
@@ -499,7 +513,7 @@ void GameMaker::checkCollision(float t)
 				}
 				else
 				{
-
+					log("%f", monster->subEnergy(0));
 				}
 				break;
 			}
@@ -513,4 +527,67 @@ void GameMaker::checkCollision(float t)
 				break;
 		}
 	}
+}
+
+//캐릭터 충돌 검사
+void GameMaker::checkCharacterCollision(float t)
+{
+	Point newPos;
+	Monster* monster = NULL;
+	Player* player = Player::getInstance();
+	for (std::vector<Monster*>::iterator iterMonster = arrMonster.begin(); iterMonster != arrMonster.end(); iterMonster++)
+	{
+		monster = (Monster*)*iterMonster;
+
+		Rect boundingBox = monster->getMonsterBody()->getBoundingBox();
+		if (boundingBox.containsPoint(player->getCharacter()->getPosition()))
+		{
+			this->unschedule(schedule_selector(GameMaker::checkCharacterCollision));
+			if (0 >= player->subEnergy(50))
+			{
+				//캐릭터 죽음.
+				player->getCharacter()->setRotation(90);
+				auto pScene = GameIntro::createScene();
+				Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
+				break;
+			}
+			else
+			{
+				if (isLeftPressed || isRightPressed)
+				{
+					this->stopMovingCharacter();
+					if (monster->getMonsterBody()->getPositionX() < player->getCharacter()->getPositionX())
+					{
+						newPos = Point(60, 0);
+						this->jumpToBack(player->getCharacter(), newPos);
+					}
+					else
+					{
+						newPos = Point(-60, 0);
+						this->jumpToBack(player->getCharacter(), newPos);
+					}
+				}
+				else
+				{
+					if (monster->getMonsterBody()->getPositionX() < player->getCharacter()->getPositionX())
+					{
+						newPos = Point(60, 0);
+						this->jumpToBack(player->getCharacter(), newPos);
+					}
+					else
+					{
+						newPos = Point(-60, 0);
+						this->jumpToBack(player->getCharacter(), newPos);
+					}
+				}
+			}
+			break;
+		}
+	}
+}
+
+//캐릭터 충돌 스케쥴 on.
+void GameMaker::onCharacterCollision()
+{
+	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
 }

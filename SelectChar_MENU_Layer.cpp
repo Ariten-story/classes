@@ -186,18 +186,15 @@ void SelectChar_MENU::selectButton(Object* pSender)
 	auto player = Player::getInstance();
 	if (clickcheck[0] == true)
 	{
-		auto Knight = Sprite::create("KnightChar.png");
-		player->createCharacter(Knight);
+		player->createWithType(0);
 	}
 	if (clickcheck[1] == true)
 	{
-		auto Assassin = Sprite::create("KnightChar.png");
-		player->createCharacter(Assassin);
+		player->createWithType(2);
 	}
 	if (clickcheck[2] == true)
 	{
-		auto Archer = Sprite::create("KnightChar.png");
-		player->createCharacter(Archer);
+		player->createWithType(3);
 	}
 	for (int i = 0; i < 4; i++)
 	{

@@ -8,7 +8,7 @@ bool INN_BG::init()
 	{
 		return false;
 	}
-
+	Director::getInstance()->getTextureCache()->removeUnusedTextures();
 	Size winSize = Director::getInstance()->getWinSize();
 
 	auto pBackGround = Sprite::create("INN_BG1.png");
