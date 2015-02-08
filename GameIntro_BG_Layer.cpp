@@ -16,7 +16,7 @@ bool GameIntro_BG::init()
 	{
 		return false;
 	}
-
+	Director::getInstance()->getTextureCache()->removeUnusedTextures();
 	Size winSize = Director::getInstance()->getWinSize();
 
 	auto *Sprite_BG = Sprite::create("BG.png");

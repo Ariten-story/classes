@@ -1,6 +1,5 @@
 #include "GameTestScene.h"
-#include "GameIntro_BG_Layer.h"
-#include "Controller.h"
+#include "GameMaker.h"
 
 USING_NS_CC;
 
@@ -16,11 +15,9 @@ Scene* GameTestScene::createScene()
 {
 	auto scene = Scene::create();
 
-	auto layer_BG = GameIntro_BG::create();
-	auto layer_controller = Controller::create();
+	auto layer = GameMaker::create();
 
-	scene->addChild(layer_BG, 0);
-	scene->addChild(layer_controller, 1);
+	scene->addChild(layer, 0);
 
 	return scene;
 }
