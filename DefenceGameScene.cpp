@@ -12,13 +12,6 @@ Scene* Defence::createScene()
 	auto layer_UI = Defence_UI::create();
 	auto layer_Monster = Defence_Monster::create();
 
-	//scene->addChild(layer_BG);
-	//scene->addChild(layer_UI);
-	//scene->addChild(layer_Monster);
-
-	scene->addChild(layer_BG,0,0);
-	scene->addChild(layer_UI,0,1);
-
 	return scene;
 }
 
