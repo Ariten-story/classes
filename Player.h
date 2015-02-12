@@ -2,6 +2,8 @@
 #define __PLAYER_H__
 
 #include "cocos2d.h"
+#define TAG_LABEL_HP 1001
+
 using namespace cocos2d;
 
 class Player : public cocos2d::CCSprite
@@ -12,10 +14,10 @@ private:
 	static Player* player;
 
 	Sprite* characterBody;//Player Sprite.
-	Sprite* hpBar; //에너지바 Sprite.
+	Label* labelHP;//에너지바 폰트.
 
 	float maxEnergy; //Player 최대HP.
-	float curEnergy; //Player 현재HP.
+	int curEnergy; //Player 현재HP.
 	float defensivePower; //Player 방어력.
 	float speedOfMove; //Player 이동속도.
 	int weaponType; //Player가 가진 무기 type.

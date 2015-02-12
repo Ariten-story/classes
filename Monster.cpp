@@ -3,6 +3,11 @@
 Monster::Monster()
 {
 	monsterBody = NULL;
+
+	//hp라벨
+	labelHP = Label::createWithSystemFont("", "", 100);
+	//hp라벨
+
 	hpBar = NULL;
 	maxEnergy = 0;
 	curEnergy = 0;
@@ -62,11 +67,15 @@ float Monster::subEnergy(float damage)
 	if (curEnergy < 0)
 	{
 		curEnergy = 0;
+
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	else
 	{
 		auto newWidth = (hpBar->getContentSize().width*curEnergy) / maxEnergy;
 		hpBar->setTextureRect(Rect(0,0,newWidth,5));
+
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	return curEnergy;
 }
@@ -130,4 +139,12 @@ void Monster::setHpBar()
 	hpBar->setPosition(Point(0, parentSize.height + 10));
 	hpBar->setAnchorPoint(Point(0.0, 0.5));
 	monsterBody->addChild(hpBar);
+
+	//라벨초기화
+	labelHP->setAnchorPoint(Point(0.5, 0));
+	labelHP->setPosition(Point(monsterBody->getContentSize().width / 2, monsterBody->getContentSize().height));
+	labelHP->setColor(Color3B::BLACK);
+	labelHP->setString(StringUtils::format("%d", curEnergy));
+	monsterBody->addChild(labelHP);
+	//라벨초기화
 }

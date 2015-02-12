@@ -3,8 +3,11 @@
 Player::Player()
 {
 	characterBody = NULL;
-	hpBar = NULL; //에너지바 Sprite.
 
+	//hp라벨
+	labelHP = Label::createWithSystemFont("", "", 100);
+	//hp라벨
+	
 	maxEnergy = 0; //Player 최대HP.
 	curEnergy = 0; //Player 현재HP.
 	defensivePower = 0; //Player 방어력.
@@ -51,7 +54,7 @@ void Player::createWithType(int type)
 	auto characterBody = Sprite::create(fileName);
 	player->setCharacter(characterBody);
 	player->setHpBar();
-	
+
 	characterBody->retain();
 }
 
@@ -81,13 +84,13 @@ float Player::subEnergy(float damage)
 	log("%f", curEnergy);
 	if (curEnergy < 0)
 	{
-		curEnergy = 0;
-		hpBar->setTextureRect(Rect(0, 0, 0, 5));
+
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	else
 	{
-		auto newWidth = (hpBar->getContentSize().width*curEnergy) / maxEnergy;
-		hpBar->setTextureRect(Rect(0, 0, newWidth, 5));
+
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	return curEnergy;
 }
@@ -101,15 +104,11 @@ float Player::plusEnergy(float heal)
 		curEnergy = maxEnergy;
 		log("heal %f", curEnergy);
 		auto newWidth = characterBody->getContentSize().width;
-		hpBar->setTextureRect(Rect(0, 0, newWidth, 5));
 	}
 	else
 	{
 		curEnergy += heal;
-		log("heal %f %f", curEnergy, hpBar->getContentSize().width);
-		auto newWidth = ((hpBar->getContentSize().width*curEnergy) / temp); //수정필요.
-		log("%f", newWidth);
-		hpBar->setTextureRect(Rect(0, 0, newWidth, 5));
+		
 	}
 	return curEnergy;
 }
@@ -147,12 +146,11 @@ float Player::getSpeedOfMove()
 //플레이어 에너지바 설정 함수.
 void Player::setHpBar()
 {
-	auto hpSize = characterBody->getContentSize().width;
-	hpBar = Sprite::create("white-512x512.png");
-	hpBar->setTextureRect(Rect(0, 0, int(hpSize), 5));
-	hpBar->setColor(Color3B::RED);
-	Size parentSize = characterBody->getContentSize();
-	hpBar->setPosition(Point(0, parentSize.height + 10));
-	hpBar->setAnchorPoint(Point(0.0, 0.5));
-	characterBody->addChild(hpBar);
+	//라벨초기화
+	labelHP->setAnchorPoint(Point(0.5,0));
+	labelHP->setPosition(Point(characterBody->getContentSize().width/2, characterBody->getContentSize().height));
+	labelHP->setColor(Color3B::BLACK);
+	labelHP->setString(StringUtils::format("%d", curEnergy));
+	characterBody->addChild(labelHP);
+	//라벨초기화
 }

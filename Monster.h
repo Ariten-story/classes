@@ -8,9 +8,11 @@ class Monster
 {
 private:
 	Sprite* monsterBody; //몬스터 Sprite.
+	Label* labelHP;//에너지바 폰트.
+
 	Sprite* hpBar; //에너지바 Sprite.
-	float maxEnergy; //몬스터 최대HP.
-	float curEnergy; //몬스터 현재HP.
+	int maxEnergy; //몬스터 최대HP.
+	int curEnergy; //몬스터 현재HP.
 	float defensivePower; //몬스터 방어력.
 	float speedOfMove; //몬스터 이동속도.
 	bool isEnermy; //몬스터 식별.
