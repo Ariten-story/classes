@@ -22,14 +22,14 @@ bool BGMaker::init()
 //배경을 만드는 함수.
 void BGMaker::createBackgroundParallax()
 {
-	auto background1 = Sprite::create("bg1.png");
+	auto background1 = Sprite::create("Defence_bg1.png");
 	background1->setAnchorPoint(Point(0, 0));
 	background1->setScaleY(winSize.height / background1->getContentSize().height);
 	background1->setScaleX(winSize.width / background1->getContentSize().width);
 
-	auto background2 = Sprite::create("bg1.png");
+	auto background2 = Sprite::create("Defence_UI_minimap.png");
 	background2->setAnchorPoint(Point(0, 0));
-	background2->setScaleY(winSize.height / background1->getContentSize().height);
+	background2->setScaleY(winSize.height);
 	background2->setScaleX(winSize.width / background1->getContentSize().width);
 
 	auto voidNode = ParallaxNode::create();
@@ -45,5 +45,5 @@ void BGMaker::createBackgroundParallax()
 void BGMaker::setPositionPlayer()
 {
 	characterSprite = Player::getInstance()->getCharacter();
-	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
+	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 3));
 }

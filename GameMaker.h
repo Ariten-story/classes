@@ -5,6 +5,8 @@
 #include "Monster.h"
 #include "Weapon.h"
 #include "Background.h"
+#include "INNScene.h"
+#include "Pop_Layer.h"
 using namespace cocos2d;
 
 class GameMaker : public cocos2d::LayerColor
@@ -14,11 +16,16 @@ private:
 	Layer* controllerLayer;
 	Size winSize;
 
+	CCProgressTimer* _progressTimeBar;
 	Sprite* characterSprite;
+	Sprite* Fcastle;
+	Sprite* Ecastle;
 	Sprite* rightSprite;
 	Sprite* leftSprite;
 	Sprite* attackSprite;
 	Sprite* skillSprite[4];
+
+	int _gameTime;
 
 	bool isLeftPressed;
 	bool isRightPressed;
@@ -81,7 +88,7 @@ public:
 	//몬스터 player쪽으로 이동
 	void moveToPlayer(Sprite* sprite, float movetime); 
 	//몬스터 생성위치 지정.
-	void setFirstPositionMonster(Sprite* sprite);
+	void setFirstPositionMonster(Sprite* sprite,int switch_on);
 	// 몬스터 생성.
 	void createMonster(float t); 
 	//몬스터 vector에 추가.
@@ -94,6 +101,16 @@ public:
 	void checkCharacterCollision(float t);
 	//캐릭터 충돌 스케쥴 on.
 	void onCharacterCollision();
+	//Castle position set
+	void setCastlePosition();
+	//Timer set
+	void createTimer();
+	void timeCount(float t);
+	void changeToOpeningScene();
+	void initGameCoin();
+	//game end
+	void missionEnd(float);
+
 
 	CREATE_FUNC(GameMaker);
 };
