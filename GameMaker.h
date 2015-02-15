@@ -111,6 +111,8 @@ public:
 	void initGameCoin();
 	//game end
 	void missionEnd(float);
+	//scene change
+	void scenechange(float);
 
 
 	CREATE_FUNC(GameMaker);

@@ -606,10 +606,9 @@ void GameMaker::checkCharacterCollision(float t)
 			{
 				//Ä³¸¯ÅÍ Á×À½.
 				player->getCharacter()->setRotation(90);
-				DelayTime::create(5.0f);
+				
 				missionEnd(player->getEnergey());
-				auto pScene = GameIntro::createScene();
-				Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
+				this->scheduleOnce(schedule_selector(GameMaker::scenechange), 3.0f);
 				break;
 			}
 			else
@@ -692,7 +691,7 @@ void GameMaker::createTimer()
 
 	this->addChild(_progressTimeBar);
 
-	CCProgressFromTo* progressToZero = CCProgressFromTo::create(10, 100, 0);
+	CCProgressFromTo* progressToZero = CCProgressFromTo::create(60, 100, 0);
 	_progressTimeBar->runAction(progressToZero);
 
 	CCSprite* timeOutline = CCSprite::create("Timer_square.png");
@@ -705,7 +704,7 @@ void GameMaker::createTimer()
 
 void GameMaker::initGameCoin()
 {
-	_gameTime = 10;  // set sec.
+	_gameTime = 60;  // set sec.
 }
 
 void GameMaker::timeCount(float t)
@@ -721,8 +720,11 @@ void GameMaker::changeToOpeningScene()
 	CCDirector::sharedDirector()->pause();
 	CCScene* pScene =Pop::createScene();
 	this->addChild(pScene, 2000);
-	
-	
 }
 
-
+//scene change
+void GameMaker::scenechange(float d)
+{
+	auto pScene = GameIntro::createScene();
+	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
+}
