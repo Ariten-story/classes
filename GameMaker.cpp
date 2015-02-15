@@ -16,6 +16,10 @@ bool GameMaker::init()
 	}
 	// 현재 사용하지않는 texture 전부 삭제.
 	Director::getInstance()->getTextureCache()->removeUnusedTextures();
+	isLeftPressed = false;
+	isRightPressed = false;
+	isAttackPressed = false;
+	isSkillPressed = false;
 	isRight = false;
 	winSize = Director::getInstance()->getWinSize();
 
@@ -37,7 +41,6 @@ bool GameMaker::init()
 
 	return true;
 }
-
 
 // 버튼 생성
 void GameMaker::createButtons()
@@ -97,9 +100,9 @@ void GameMaker::onEnter()
 
 	auto listener = EventListenerTouchAllAtOnce::create();
 
-	listener->onTouchesBegan = CC_CALLBACK_2(GameMaker::onTouchBegan, this);
-	listener->onTouchesMoved = CC_CALLBACK_2(GameMaker::onTouchMoved, this);
-	listener->onTouchesEnded = CC_CALLBACK_2(GameMaker::onTouchEnded, this);
+	listener->onTouchesBegan = CC_CALLBACK_2(GameMaker::onTouchesBegan, this);
+	listener->onTouchesMoved = CC_CALLBACK_2(GameMaker::onTouchesMoved, this);
+	listener->onTouchesEnded = CC_CALLBACK_2(GameMaker::onTouchesEnded, this);
 
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 }
@@ -112,64 +115,69 @@ void GameMaker::onExit()
 	Layer::onExit();
 }
 // 터치 시작
-void GameMaker::onTouchBegan(const std::vector<cocos2d::Touch*>& touches, Event* event) // 터치 시작시
+void GameMaker::onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, Event* event) // 터치 시작시
 {
-	isLeftPressed = false;
-	isRightPressed = false;
-	isAttackPressed = false;
-	isSkillPressed = false;
-	for (auto &touch : touches)
+	for (auto &item : touches)
 	{
-
+		auto touch = item;
+		log("id = %d", touch->getID());
 		// 터치가 어느 버튼안에 들어갔는지 체크
 		if (this->isTouchInside(leftSprite, touch) == true)
 		{
+			log("left: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isLeftPressed = true;
 			isRight = false;
 		}
 		else if (this->isTouchInside(rightSprite, touch) == true)
 		{
+			log("right: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isRightPressed = true;
 			isRight = true;
 		}
 		else if (this->isTouchInside(attackSprite, touch) == true)
 		{
+			log("attack: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isAttackPressed = true;
 		}
 		else
 		{
+			log("skill: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			for (int i = 0; i < 4; i++)
 			{
-				if (this->isTouchInside(skillSprite[i], touch) == true)
+				if (this->isTouchInside(skillSprite[i], touch))
 					isSkillPressed = true;
 			}
 		}
-	}
-	// 버튼이 눌러졌으면 실행.
-	if (isLeftPressed == true || isRightPressed == true)
-	{
-		this->startMovingCharacter();
-	}
-	if (isAttackPressed == true || isSkillPressed == true)
-	{
-		this->startAttackCharacter();
+
+		// 버튼이 눌러졌으면 실행.
+		if (isLeftPressed == true || isRightPressed == true)
+		{
+			this->startMovingCharacter();
+		}
+		if (isAttackPressed == true || isSkillPressed == true)
+		{
+			this->startAttackCharacter();
+		}
 	}
 }
 
 // 터치 중
-void GameMaker::onTouchMoved(const std::vector<cocos2d::Touch*>& touches, Event* event)
+void GameMaker::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, Event* event)
 {
-	for (auto &touch : touches)
+	for (auto &item : touches)
 	{
+		auto touch = item;
 		// 왼쪽 터치 체크
 		if (isLeftPressed == true && this->isTouchInside(leftSprite, touch) == false)
 		{
+			log("exit left: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isLeftPressed = false;
 			isRight = false;
 			this->stopMovingCharacter();
 		}
 		else if (isLeftPressed == false && this->isTouchInside(leftSprite, touch) == true)
 		{
+			log("enter left: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isLeftPressed = true;
 			isRight = false;
 			this->startMovingCharacter();
@@ -177,12 +185,14 @@ void GameMaker::onTouchMoved(const std::vector<cocos2d::Touch*>& touches, Event*
 		// 오른쪽 터치 체크
 		if (isRightPressed == true && this->isTouchInside(rightSprite, touch) == false)
 		{
+			log("exit right: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isRightPressed = false;
 			isRight = true;
 			this->stopMovingCharacter();
 		}
 		else if (isRightPressed == false && this->isTouchInside(rightSprite, touch) == true)
 		{
+			log("enter right: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isRightPressed = true;
 			isRight = true;
 			this->startMovingCharacter();
@@ -190,12 +200,14 @@ void GameMaker::onTouchMoved(const std::vector<cocos2d::Touch*>& touches, Event*
 		// 공격 터치 체크
 		if (isAttackPressed == true && this->isTouchInside(attackSprite, touch) == false)
 		{
+			log("exit attack: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			isAttackPressed = false;
 			this->stopAttackCharacter();
 		}
 		// 스킬 터치 체크
 		if (isSkillPressed == true)
 		{
+			log("exit skill: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
 			for (int i = 0; i < 4; i++)
 			{
 				if (this->isTouchInside(skillSprite[i], touch) == false)
@@ -206,23 +218,31 @@ void GameMaker::onTouchMoved(const std::vector<cocos2d::Touch*>& touches, Event*
 			}
 		}
 	}
+	
 }
 
 // 터치 종료
-void GameMaker::onTouchEnded(const std::vector<cocos2d::Touch*>& touches, Event* event)
+void GameMaker::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, Event* event)
 {
-	//움직임 & 공격 종료.
-	if (isLeftPressed == true || isRightPressed == true)
+
+	for (auto &item : touches)
 	{
-		isLeftPressed = false;
-		isRightPressed = false;
-		this->stopMovingCharacter();
-	}
-	else if (isAttackPressed == true || isSkillPressed == true)
-	{
-		isAttackPressed = false;
-		isSkillPressed = false;
-		this->stopAttackCharacter();
+		auto touch = item;
+		//움직임 & 공격 종료.
+		if (isLeftPressed == true || isRightPressed == true)
+		{
+			log("end touch : move");
+			isLeftPressed = false;
+			isRightPressed = false;
+			this->stopMovingCharacter();
+		}
+		if (isAttackPressed == true || isSkillPressed == true)
+		{
+			log("end touch : attack");
+			isAttackPressed = false;
+			isSkillPressed = false;
+			this->stopAttackCharacter();
+		}
 	}
 }
 
@@ -251,12 +271,16 @@ void GameMaker::stopMovingCharacter()
 void GameMaker::moveCharacter(float t)
 {
 	auto moveStep = 5;
+	if (isLeftPressed == true && isRightPressed == true)
+	{
+		moveStep = 0;
+	}
 	if (isLeftPressed == true)
 	{
 		moveStep = -5;
 		characterSprite->setFlippedX(false);
 	}
-	else
+	else if (isRightPressed == true)
 	{
 		moveStep = 5;
 		characterSprite->setFlippedX(true);
@@ -280,7 +304,7 @@ void GameMaker::moveCharacter(float t)
 void GameMaker::startAttackCharacter()
 {
 	log("Start Attack");
-	this->schedule(schedule_selector(GameMaker::attackCharacter), 0.6f);
+	this->schedule(schedule_selector(GameMaker::attackCharacter),0.6f);
 }
 
 // 캐릭터 공격종료.
