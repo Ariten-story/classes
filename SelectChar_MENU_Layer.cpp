@@ -186,7 +186,7 @@ void SelectChar_MENU::selectButton(Object* pSender)
 	auto player = Player::getInstance();
 	if (clickcheck[0] == true)
 	{
-		player->createWithType(0);
+		player->createWithType(1);
 	}
 	if (clickcheck[1] == true)
 	{

@@ -14,7 +14,7 @@ GameTestScene::~GameTestScene()
 Scene* GameTestScene::createScene()
 {
 	auto scene = Scene::create();
-
+	
 	auto layer = GameMaker::create();
 
 	scene->addChild(layer, 0);
