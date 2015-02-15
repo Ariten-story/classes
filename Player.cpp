@@ -151,6 +151,7 @@ void Player::setHpBar()
 	labelHP->setPosition(Point(characterBody->getContentSize().width/2, characterBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
 	labelHP->setString(StringUtils::format("%d", curEnergy));
-	characterBody->addChild(labelHP);
+	labelHP->setTag(123);
+	characterBody->addChild(labelHP); //player캐릭터 재 선택시 오류가 생김 수정 필.
 	//라벨초기화
 }
