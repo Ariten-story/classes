@@ -478,8 +478,8 @@ void GameMaker::setCastlePosition()
 	Fcastle = castle->getFCastleBody();
 	Ecastle = castle->getECastleBody();
 
-	Fcastle->setPosition(Point(2490, winSize.height / 4));
-	Ecastle->setPosition(Point(winSize.width/10, winSize.height / 4));
+	Fcastle->setPosition(Point(winSize.width/10, winSize.height / 4));
+	Ecastle->setPosition(Point(2490, winSize.height / 4));
 }
 
 //몬스터 vector에 추가.
@@ -692,7 +692,7 @@ void GameMaker::createTimer()
 
 	this->addChild(_progressTimeBar);
 
-	CCProgressFromTo* progressToZero = CCProgressFromTo::create(60, 100, 0);
+	CCProgressFromTo* progressToZero = CCProgressFromTo::create(10, 100, 0);
 	_progressTimeBar->runAction(progressToZero);
 
 	CCSprite* timeOutline = CCSprite::create("Timer_square.png");
@@ -705,7 +705,7 @@ void GameMaker::createTimer()
 
 void GameMaker::initGameCoin()
 {
-	_gameTime = 60;  // set sec.
+	_gameTime = 10;  // set sec.
 }
 
 void GameMaker::timeCount(float t)
@@ -719,7 +719,10 @@ void GameMaker::changeToOpeningScene()
 {
 	this->unschedule(schedule_selector(GameMaker::timeCount));
 	CCDirector::sharedDirector()->pause();
-	PopLayer::createscene();
+	CCScene* pScene =Pop::createScene();
+	this->addChild(pScene, 2000);
+	
+	
 }
 
 

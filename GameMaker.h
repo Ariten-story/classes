@@ -6,7 +6,8 @@
 #include "Weapon.h"
 #include "Background.h"
 #include "INNScene.h"
-#include "Pop_Layer.h"
+#include "PopScene.h"
+
 using namespace cocos2d;
 
 class GameMaker : public cocos2d::LayerColor

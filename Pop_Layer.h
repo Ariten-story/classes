@@ -12,17 +12,13 @@ public:
 
 	virtual bool init();
 
-	static cocos2d::CCScene* createscene();
-	CREATE_FUNC(PopLayer);
 
 	cocos2d::CCSize winSize;
-
 	CCLayerColor* backLayer;
-
 	CCLayerColor* popUpLayer;
-
 	void PopLayer::doClose(CCObject* pSender);
 
+	CREATE_FUNC(PopLayer);
 };
 
-#endif // _PopLayer__
+#endif // _Pop_Layer__H
