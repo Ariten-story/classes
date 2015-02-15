@@ -45,13 +45,14 @@ public:
 	//터치구현 함수들.
 	virtual void onEnter();
 	virtual void onExit();
-	virtual bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event);
-	virtual void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event *event);
-	virtual void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event);
+	virtual void onTouchBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *event);
+	virtual void onTouchMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *event);
+	virtual void onTouchEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event *event);
 	//안드로이드 back버튼 구현 함수.
 	virtual void onKeyReleased(cocos2d::EventKeyboard::KeyCode keycode, cocos2d::Event *event);
 	//터치 확인 함수.
 	bool isTouchInside(cocos2d::Sprite* sprite, cocos2d::Touch* touch);
+	//bool isTouchInside(cocos2d::Sprite* sprite, cocos2d::Touch* touch);
 	//캐릭터 움직임 시작 함수.
 	void startMovingCharacter();
 	//캐릭터 움직임 중지 함수.
