@@ -167,6 +167,7 @@ void GameMaker::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, Even
 	for (auto &item : touches)
 	{
 		auto touch = item;
+		/*
 		// 왼쪽 터치 체크
 		if (isLeftPressed == true && this->isTouchInside(leftSprite, touch) == false)
 		{
@@ -216,6 +217,27 @@ void GameMaker::onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, Even
 					this->stopAttackCharacter();
 				}
 			}
+		}
+		*/
+		if (isLeftPressed == false && this->isTouchInside(leftSprite, touch) == true)
+		{
+			log("enter left: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
+			isLeftPressed = true;
+			isRight = false;
+			this->startMovingCharacter();
+		}
+		if (isRightPressed == false && this->isTouchInside(rightSprite, touch) == true)
+		{
+			log("enter right: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
+			isRightPressed = true;
+			isRight = true;
+			this->startMovingCharacter();
+		}
+		if (isAttackPressed == true && this->isTouchInside(attackSprite, touch) == false)
+		{
+			log("exit attack: x = %f, y =%f", touch->getLocation().x, touch->getLocation().y);
+			isAttackPressed = false;
+			this->stopAttackCharacter();
 		}
 	}
 	
