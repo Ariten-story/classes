@@ -2,37 +2,48 @@
 
 Castle::Castle()
 {
-	EnemyCastleBody = NULL; //Enemy Castle Sprite.
-	FriendCastleBody = NULL; //Friend Castle Sprite.
-	FriendhpBar = NULL; //Friend hp Sprite.
-	F_Castle_maxEnergy = 0; //Castle Max HP.
-	F_Castle_curEnergy = 0; //Castle Current HP.
-
+	labelHP = NULL;
+	castleBody = NULL; //Enemy Castle Sprite.
+	maxEnergy = 0; //Castle Max HP.
+	curEnergy = 0; //Castle Current HP.
+	isEnemyCastle = true;
 }
 Castle::~Castle()
 {
 	log("delete castle");
-	
+	release();
 }
 
-
-
+//Delete Castle.
+void Castle::release()
+{
+	if (castleBody != NULL)
+	{
+		castleBody->removeFromParentAndCleanup(true);
+		castleBody = NULL;
+	}
+}
 //Castle maker
 Castle* Castle::createCastle(int Type)
 {
-	const char *ffileName;
-	const char *efileName;
+	const char *fileName;
 
 	Castle* castle = new Castle();
 
-	ffileName = "FCastle.png";
-	efileName = "ECastle.png";
-	castle->setEnergey(200);
+	if (Type == 0)
+	{
+		fileName = "Ecastle.png";
+		castle->setIsEnemy(true);
+	}
+	else if (Type == 1)
+	{
+		fileName = "FCastle.png";
+		castle->setIsEnemy(false);
+	}
+	castle->setEnergey(1000);
 
-	auto EnemyCastleBody = Sprite::create(efileName);
-	auto FriendCastleBody = Sprite::create(ffileName);
-	castle->setECastleBody(EnemyCastleBody);
-	castle->setFCastleBody(FriendCastleBody);
+	auto castleBody = Sprite::create(fileName);
+	castle->setCastleBody(castleBody);
 	castle->setHpBar();
 
 	return castle;
@@ -43,57 +54,55 @@ Castle* Castle::createCastle(int Type)
 //Castle set Energey
 void Castle::setEnergey(float max)
 {
-	F_Castle_maxEnergy = F_Castle_curEnergy = max;
+	maxEnergy = curEnergy = max;
 }
 
 //Castle attacked
 float Castle::subEnergy(float damage)
 {
-	F_Castle_curEnergy -= damage;
-	if (F_Castle_curEnergy < 0)
+	curEnergy -= damage;
+	if (curEnergy < 0)
 	{
-		F_Castle_curEnergy = 0;
+		curEnergy = 0;
+
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	else
 	{
-		auto newWidth = (FriendhpBar->getContentSize().width*F_Castle_curEnergy) / F_Castle_maxEnergy;
-		FriendhpBar->setTextureRect(Rect(0, 0, newWidth, 5));
+		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
-	return F_Castle_curEnergy;
+	return curEnergy;
 }
 
 //Castle Sprite
-void Castle::setECastleBody(Sprite* sprite)
+void Castle::setCastleBody(Sprite* sprite)
 {
-	EnemyCastleBody = sprite;
+	castleBody = sprite;
 }
-
-void Castle::setFCastleBody(Sprite* sprite)
-{
-	FriendCastleBody = sprite;
-}
-
 
 //return Castle Sprite
-Sprite* Castle::getFCastleBody()
+Sprite* Castle::getCastleBody()
 {
-	return FriendCastleBody;
+	return castleBody;
 }
-
-Sprite* Castle::getECastleBody()
-{
-	return EnemyCastleBody;
-}
-
 
 void Castle::setHpBar()
 {
-	auto hpSize = FriendCastleBody->getContentSize().width;
-	FriendhpBar = Sprite::create("white-512x512.png");
-	FriendhpBar->setTextureRect(Rect(0, 0, int(hpSize), 5));
-	FriendhpBar->setColor(Color3B::RED);
-	Size parentSize = FriendCastleBody->getContentSize();
-	FriendhpBar->setPosition(Point(0, parentSize.height + 10));
-	FriendhpBar->setAnchorPoint(Point(0.0, 0.5));
-	FriendCastleBody->addChild(FriendhpBar);
+	//라벨초기화
+	labelHP = Label::createWithSystemFont("", "", 100);
+	labelHP->setAnchorPoint(Point(0.5, 0));
+	labelHP->setPosition(Point(castleBody->getContentSize().width / 2, castleBody->getContentSize().height));
+	labelHP->setColor(Color3B::BLACK);
+	labelHP->setString(StringUtils::format("%d", curEnergy));
+	castleBody->addChild(labelHP);
+}
+//set isEnemyCastle
+void Castle::setIsEnemy(bool Enemy)
+{
+	isEnemyCastle = Enemy;
+}
+//get isEnemyCastle
+bool Castle::getIsEnemy()
+{
+	return isEnemyCastle;
 }

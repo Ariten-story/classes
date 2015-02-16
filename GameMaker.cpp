@@ -32,17 +32,16 @@ bool GameMaker::init()
 	this->createButtons();
 	this->createTimer();
 	this->setKeypadEnabled(true);
-	this->setCastlePosition();
 	this->createBackgroundParallax();
 	this->setPositionPlayer();
+	this->createCastle();
 	backgroundLayer->addChild(characterSprite);
-	backgroundLayer->addChild(Fcastle);
-	backgroundLayer->addChild(Ecastle);
 	
 	backgroundLayer->runAction(Follow::create(characterSprite, Rect(0, 0, 1280 * 2, 720)));
 	this->schedule(schedule_selector(GameMaker::createMonster), 3.0f);
 	this->schedule(schedule_selector(GameMaker::checkCollision));
 	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
+	this->schedule(schedule_selector(GameMaker::checkCastleCollision));
 	this->schedule(schedule_selector(GameMaker::timeCount), 1.0f);
 
 	return true;
@@ -471,21 +470,10 @@ void GameMaker::createMonster(float t)
 	backgroundLayer->addChild(monster->getMonsterBody());
 }
 
-//set castle Position
-void GameMaker::setCastlePosition()
-{
-	Castle* castle = Castle::createCastle(0);
-	Fcastle = castle->getFCastleBody();
-	Ecastle = castle->getECastleBody();
-
-	Fcastle->setPosition(Point(winSize.width/10, winSize.height / 4));
-	Ecastle->setPosition(Point(2490, winSize.height / 4));
-}
-
 //몬스터 vector에 추가.
 void GameMaker::addMonsterList(Monster* monster)
 {
-	if (true == monster->getIsEnermy())
+	if (true == monster->getIsEnemy())
 		arrMonster.push_back(monster);
 }
 
@@ -561,20 +549,23 @@ void GameMaker::checkCollision(float t)
 			if (boundingBox.containsPoint(weapon->getweaponBody()->getPosition()))
 			{
 				bHit = true;
-				if (0 >= monster->subEnergy(weapon->getDamage()))
+				if (monster->getIsEnemy() == true)
 				{
-					log("%f", monster->subEnergy(0));
-					monster->release();
-					delete monster;
-					iterMonster = arrMonster.erase(iterMonster);
-					if (iterMonster == arrMonster.end())
-						break;
+					if (0 >= monster->subEnergy(weapon->getDamage()))
+					{
+						log("%f", monster->subEnergy(0));
+						monster->release();
+						delete monster;
+						iterMonster = arrMonster.erase(iterMonster);
+						if (iterMonster == arrMonster.end())
+							break;
+					}
+					else
+					{
+						log("%f", monster->subEnergy(0));
+					}
+					break;
 				}
-				else
-				{
-					log("%f", monster->subEnergy(0));
-				}
-				break;
 			}
 		}
 		if (true == bHit)
@@ -652,6 +643,80 @@ void GameMaker::onCharacterCollision()
 	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
 }
 
+//무기와 Castle 충돌 검사
+void GameMaker::checkCastleCollision(float t)
+{
+	Weapon* weapon = NULL;
+	Castle* castle = NULL;
+
+	for (std::vector<Weapon*>::iterator iterWeapon = arrWeapon.begin(); iterWeapon != arrWeapon.end(); iterWeapon++)
+	{
+		weapon = (Weapon*)*iterWeapon;
+
+		bool bHit = false;
+		for (std::vector<Castle*>::iterator iterCastle = arrCastle.begin(); iterCastle != arrCastle.end(); iterCastle++)
+		{
+			castle = (Castle*)*iterCastle;
+
+			Rect boundingBox = castle->getCastleBody()->getBoundingBox();
+			if (boundingBox.containsPoint(weapon->getweaponBody()->getPosition()))
+			{
+				bHit = true;
+				if (castle->getIsEnemy() == true)
+				{
+					if (0 >= castle->subEnergy(weapon->getDamage()))
+					{
+						log("%f", castle->subEnergy(0));
+						castle->release();
+						delete castle;
+						iterCastle = arrCastle.erase(iterCastle);
+						if (iterCastle == arrCastle.end())
+							break;
+					}
+					else
+					{
+						log("%f", castle->subEnergy(0));
+					}
+					break;
+				}
+			}
+		}
+		if (true == bHit)
+		{
+			weapon->release();
+			delete weapon;
+			iterWeapon = arrWeapon.erase(iterWeapon);
+			if (iterWeapon == arrWeapon.end())
+				break;
+		}
+	}
+}
+
+//Create Castle
+void GameMaker::createCastle()
+{
+	Castle* eCaslte = Castle::createCastle(0);//0 is Enemy
+	Castle* fCaslte = Castle::createCastle(1);//1 is Friend
+
+	auto eCastleBody = eCaslte->getCastleBody();
+	auto fCastleBody = fCaslte->getCastleBody();
+
+	fCastleBody->setPosition(Point(200, (winSize.height / 4)+20));
+	fCastleBody->setAnchorPoint(Point(0.0, 0.5));
+	eCastleBody->setPosition(Point(2450, (winSize.height / 4) + 20));
+	fCastleBody->setAnchorPoint(Point(1.0, 0.5));
+
+	backgroundLayer->addChild(eCaslte->getCastleBody());
+	backgroundLayer->addChild(fCaslte->getCastleBody());
+	this->addCastleList(eCaslte);
+	this->addCastleList(fCaslte);
+}
+//Castle vector에 추가.
+void GameMaker::addCastleList(Castle* castle)
+{
+	if (true == castle->getIsEnemy())
+		arrCastle.push_back(castle);
+}
 
 //mission end
 void GameMaker::missionEnd(float HP)
@@ -663,7 +728,6 @@ void GameMaker::missionEnd(float HP)
 		gameover->setPosition(Point(winSize.width / 2, winSize.height / 2));
 
 		this->addChild(gameover);
-
 	}
 	else
 	{
@@ -672,9 +736,7 @@ void GameMaker::missionEnd(float HP)
 		clearMessage->setPosition(Point(winSize.width / 2, winSize.height / 2));
 
 		this->addChild(clearMessage);
-
 	}
-
 }
 //Timer set
 void GameMaker::createTimer()
@@ -683,7 +745,7 @@ void GameMaker::createTimer()
 
 	CCSprite* timeBar = CCSprite::create("Timer.png");
 	_progressTimeBar = CCProgressTimer::create(timeBar);
-	_progressTimeBar->setPosition(ccp(winSize.width * 0.5f, 27));
+	_progressTimeBar->setPosition(ccp(winSize.width * 0.5f, winSize.height-50));
 	_progressTimeBar->setPercentage(100.0f);
 	_progressTimeBar->setMidpoint(ccp(0, 0.5f));
 	_progressTimeBar->setBarChangeRate(ccp(1, 0));
@@ -695,7 +757,7 @@ void GameMaker::createTimer()
 	_progressTimeBar->runAction(progressToZero);
 
 	CCSprite* timeOutline = CCSprite::create("Timer_square.png");
-	timeOutline->setPosition(ccp(winSize.width * 0.5f, 27));
+	timeOutline->setPosition(ccp(winSize.width * 0.5f, winSize.height - 50));
 	timeOutline->setVisible(true);
 	this->addChild(timeOutline,2);
 	

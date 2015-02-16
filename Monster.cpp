@@ -3,15 +3,11 @@
 Monster::Monster()
 {
 	monsterBody = NULL;
-
 	//hp라벨
-	labelHP = Label::createWithSystemFont("", "", 100);
-	//hp라벨
-
-	hpBar = NULL;
+	labelHP = NULL;
 	maxEnergy = 0;
 	curEnergy = 0;
-	isEnermy = true;
+	isEnemy = true;
 	defensivePower = 0;
 	speedOfMove = 0;
 }
@@ -43,7 +39,7 @@ Monster* Monster::createWithType(int Type)
 	monster->setEnergey(200);
 	monster->setDefensivePower(0);
 	monster->setSpeedOfMove(70);
-	monster->setIsEnermy(true);
+	monster->setIsEnemy(true);
 
 	auto monsterBody = Sprite::create(fileName);
 	monster->setMonsterBody(monsterBody);
@@ -72,9 +68,6 @@ float Monster::subEnergy(float damage)
 	}
 	else
 	{
-		auto newWidth = (hpBar->getContentSize().width*curEnergy) / maxEnergy;
-		hpBar->setTextureRect(Rect(0,0,newWidth,5));
-
 		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	return curEnergy;
@@ -93,15 +86,15 @@ Sprite* Monster::getMonsterBody()
 }
 
 //몬스터 식별 설정 함수.
-void Monster::setIsEnermy(bool check)
+void Monster::setIsEnemy(bool check)
 {
-	isEnermy = check;
+	isEnemy = check;
 }
 
 //몬스터 식별 반환 함수.
-bool Monster::getIsEnermy()
+bool Monster::getIsEnemy()
 {
-	return isEnermy;
+	return isEnemy;
 }
 
 //몬스터 방어력 설정 함수.
@@ -131,20 +124,11 @@ float Monster::getSpeedOfMove()
 //몬스터 에너지바 설정 함수.
 void Monster::setHpBar()
 {
-	auto hpSize = monsterBody->getContentSize().width;
-	hpBar = Sprite::create("white-512x512.png");
-	hpBar->setTextureRect(Rect(0, 0, int(hpSize), 5));
-	hpBar->setColor(Color3B::RED);
-	Size parentSize = monsterBody->getContentSize();
-	hpBar->setPosition(Point(0, parentSize.height + 10));
-	hpBar->setAnchorPoint(Point(0.0, 0.5));
-	monsterBody->addChild(hpBar);
-
 	//라벨초기화
+	labelHP = Label::createWithSystemFont("", "", 100);
 	labelHP->setAnchorPoint(Point(0.5, 0));
 	labelHP->setPosition(Point(monsterBody->getContentSize().width / 2, monsterBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
 	labelHP->setString(StringUtils::format("%d", curEnergy));
 	monsterBody->addChild(labelHP);
-	//라벨초기화
 }

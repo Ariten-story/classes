@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Monster.h"
 #include "Weapon.h"
+#include "Castle.h"
 #include "Background.h"
 #include "INNScene.h"
 #include "PopScene.h"
@@ -19,8 +20,6 @@ private:
 
 	CCProgressTimer* _progressTimeBar;
 	Sprite* characterSprite;
-	Sprite* Fcastle;
-	Sprite* Ecastle;
 	Sprite* rightSprite;
 	Sprite* leftSprite;
 	Sprite* attackSprite;
@@ -36,6 +35,7 @@ private:
 
 	std::vector<Monster*> arrMonster;
 	std::vector<Weapon*> arrWeapon;
+	std::vector<Castle*> arrCastle;
 	
 public:
 
@@ -102,8 +102,12 @@ public:
 	void checkCharacterCollision(float t);
 	//캐릭터 충돌 스케쥴 on.
 	void onCharacterCollision();
-	//Castle position set
-	void setCastlePosition();
+	//Castle 충돌 검사
+	void checkCastleCollision(float t);
+	//Create Caslte
+	void createCastle();
+	//Castle vector에 추가.
+	void addCastleList(Castle* castle);
 	//Timer set
 	void createTimer();
 	void timeCount(float t);

@@ -7,34 +7,35 @@ using namespace cocos2d;
 class Castle
 {
 private:
-	Sprite* EnemyCastleBody; //Enemy Castle Sprite.
-	Sprite* FriendCastleBody; //Friend Castle Sprite.
-	Sprite* FriendhpBar; //Friend hp Sprite.
-	float F_Castle_maxEnergy; //Castle Max HP.
-	float F_Castle_curEnergy; //Castle Current HP.
-
+	Sprite* castleBody; //Enemy Castle Sprite.
+	Label* labelHP;//에너지바 폰트.
+	float maxEnergy; //Castle Max HP.
+	float curEnergy; //Castle Current HP.
+	bool isEnemyCastle;
 
 public:
 
 	Castle();
 	virtual ~Castle();
 
-
 	//Make Castle
 	static Castle* createCastle(int Type);
 	//set Castle
-	void Castle::setFCastleBody(Sprite* sprite);
-	void Castle::setECastleBody(Sprite* sprite);
-	
+	void Castle::setCastleBody(Sprite* sprite);
+
 	//return Castle sprite
-	Sprite* getFCastleBody();
-	Sprite* getECastleBody();
+	Sprite* getCastleBody();
 	//set Castle Energey
 	void setEnergey(float max);
 	//Castle attacked damage
 	float subEnergy(float damage);
-	//set F_Castle Hp
+	//set Castle Hp
 	void setHpBar();
-
+	//set isEnemyCastle
+	void setIsEnemy(bool Enemy);
+	//get isEnemyCastle
+	bool getIsEnemy();
+	//delete Castle
+	void release();
 };
 #endif // __CASTLE_H__

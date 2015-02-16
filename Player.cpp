@@ -5,8 +5,7 @@ Player::Player()
 	characterBody = NULL;
 
 	//hp라벨
-	labelHP = Label::createWithSystemFont("", "", 100);
-	//hp라벨
+	labelHP = NULL;
 	
 	maxEnergy = 0; //Player 최대HP.
 	curEnergy = 0; //Player 현재HP.
@@ -50,7 +49,7 @@ void Player::createWithType(int type)
 		player->setDefensivePower(0);
 		player->setSpeedOfMove(5);
 	}
-	
+
 	auto characterBody = Sprite::create(fileName);
 	player->setCharacter(characterBody);
 	player->setHpBar();
@@ -84,12 +83,10 @@ float Player::subEnergy(float damage)
 	log("%f", curEnergy);
 	if (curEnergy < 0)
 	{
-
 		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	else
 	{
-
 		labelHP->setString(StringUtils::format("%d", curEnergy));
 	}
 	return curEnergy;
@@ -147,10 +144,10 @@ float Player::getSpeedOfMove()
 void Player::setHpBar()
 {
 	//라벨초기화
+	labelHP = Label::createWithSystemFont("", "", 100);
 	labelHP->setAnchorPoint(Point(0.5,0));
 	labelHP->setPosition(Point(characterBody->getContentSize().width/2, characterBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
 	labelHP->setString(StringUtils::format("%d", curEnergy));
 	characterBody->addChild(labelHP);
-	//라벨초기화
 }
