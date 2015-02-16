@@ -10,12 +10,11 @@ private:
 	Sprite* monsterBody; //몬스터 Sprite.
 	Label* labelHP;//에너지바 폰트.
 
-	Sprite* hpBar; //에너지바 Sprite.
 	int maxEnergy; //몬스터 최대HP.
 	int curEnergy; //몬스터 현재HP.
 	float defensivePower; //몬스터 방어력.
 	float speedOfMove; //몬스터 이동속도.
-	bool isEnermy; //몬스터 식별.
+	bool isEnemy; //몬스터 식별.
 
 	//후에 공격력,공격속도,사정거리 등등 만들어야됨.
 
@@ -35,9 +34,9 @@ public:
 	//몬스터 받는피해처리 함수.
 	float subEnergy(float damage);
 	//몬스터 식별 설정 함수.
-	void setIsEnermy(bool check);
+	void setIsEnemy(bool check);
 	//몬스터 식별 반환 함수.
-	bool getIsEnermy();
+	bool getIsEnemy();
 	//몬스터 방어력 설정 함수.
 	void setDefensivePower(float defensive);
 	//몬스터 방어력 반환 함수.

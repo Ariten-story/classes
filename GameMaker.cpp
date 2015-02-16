@@ -1,6 +1,7 @@
 #include "GameMaker.h"
 #include "Player.h"
 #include "GameIntroScene.h"
+#include "Castle.h"
 #include <random>
 
 /*
@@ -27,17 +28,21 @@ bool GameMaker::init()
 	controllerLayer = Layer::create();
 	this->addChild(backgroundLayer);
 	this->addChild(controllerLayer);
-
+	
 	this->createButtons();
+	this->createTimer();
 	this->setKeypadEnabled(true);
-
 	this->createBackgroundParallax();
 	this->setPositionPlayer();
+	this->createCastle();
 	backgroundLayer->addChild(characterSprite);
+	
 	backgroundLayer->runAction(Follow::create(characterSprite, Rect(0, 0, 1280 * 2, 720)));
 	this->schedule(schedule_selector(GameMaker::createMonster), 3.0f);
 	this->schedule(schedule_selector(GameMaker::checkCollision));
 	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
+	this->schedule(schedule_selector(GameMaker::checkCastleCollision));
+	this->schedule(schedule_selector(GameMaker::timeCount), 1.0f);
 
 	return true;
 }
@@ -358,7 +363,7 @@ void GameMaker::createBackgroundParallax()
 void GameMaker::setPositionPlayer()
 {
 	characterSprite = Player::getInstance()->getCharacter();
-	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 2));
+	characterSprite->setPosition(Point(winSize.width / 2, winSize.height / 4));
 }
 
 // 무기 생성위치 지정.
@@ -439,16 +444,35 @@ void GameMaker::WeaponRemover(Node* sender)
 }
 
 // 몬스터 생성위치 지정.
-void GameMaker::setFirstPositionMonster(Sprite* sprite)
+void GameMaker::setFirstPositionMonster(Sprite* sprite,int switch_on)
 {
-	std::random_device rd;
-	std::mt19937 rEngine(rd());
-	std::uniform_int_distribution<> dist(0, 2500);
-	auto result = dist(rEngine);
-	float xPos = result;//rand() % (1280 * 2);
-	float yPos = (winSize.height / 2) - 20;
-	sprite->setPosition(Point(xPos, yPos));
-	sprite->setAnchorPoint(Point(0.5, 0.5));
+	switch (switch_on)
+	{
+	case 0:
+	{
+		float yPos = (winSize.height / 4) + 20;
+		sprite->setPosition(Point(2400, yPos));
+		sprite->setAnchorPoint(Point(0.5, 0.5));
+		break;
+	}
+	case 1:
+
+	case 2:
+	{
+		std::random_device rd;
+		std::mt19937 rEngine(rd());
+		std::uniform_int_distribution<> dist(0, 2500);
+		auto result = dist(rEngine);
+		float xPos = result;//rand() % (1280 * 2);
+		float yPos = (winSize.height / 4) + 20;
+		sprite->setPosition(Point(xPos, yPos));
+		sprite->setAnchorPoint(Point(0.5, 0.5));
+		break;
+	}
+	default:
+		break;
+	}
+	
 }
 
 // 몬스터 생성.
@@ -457,7 +481,7 @@ void GameMaker::createMonster(float t)
 	//Type별 몬스터 생성.
 	Monster* monster = Monster::createWithType(0);
 	//몬스터 최초위치 설정.
-	this->setFirstPositionMonster(monster->getMonsterBody());
+	this->setFirstPositionMonster(monster->getMonsterBody(),0);
 	//거리,시간 계산.
 	float distance = monster->getMonsterBody()->getPositionX();
 	float movetime = distance / monster->getSpeedOfMove();
@@ -471,7 +495,7 @@ void GameMaker::createMonster(float t)
 //몬스터 vector에 추가.
 void GameMaker::addMonsterList(Monster* monster)
 {
-	if (true == monster->getIsEnermy())
+	if (true == monster->getIsEnemy())
 		arrMonster.push_back(monster);
 }
 
@@ -547,20 +571,23 @@ void GameMaker::checkCollision(float t)
 			if (boundingBox.containsPoint(weapon->getweaponBody()->getPosition()))
 			{
 				bHit = true;
-				if (0 >= monster->subEnergy(weapon->getDamage()))
+				if (monster->getIsEnemy() == true)
 				{
-					log("%f", monster->subEnergy(0));
-					monster->release();
-					delete monster;
-					iterMonster = arrMonster.erase(iterMonster);
-					if (iterMonster == arrMonster.end())
-						break;
+					if (0 >= monster->subEnergy(weapon->getDamage()))
+					{
+						log("%f", monster->subEnergy(0));
+						monster->release();
+						delete monster;
+						iterMonster = arrMonster.erase(iterMonster);
+						if (iterMonster == arrMonster.end())
+							break;
+					}
+					else
+					{
+						log("%f", monster->subEnergy(0));
+					}
+					break;
 				}
-				else
-				{
-					log("%f", monster->subEnergy(0));
-				}
-				break;
 			}
 		}
 		if (true == bHit)
@@ -592,8 +619,9 @@ void GameMaker::checkCharacterCollision(float t)
 			{
 				//캐릭터 죽음.
 				player->getCharacter()->setRotation(90);
-				auto pScene = GameIntro::createScene();
-				Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
+				
+				missionEnd(player->getEnergey());
+				this->scheduleOnce(schedule_selector(GameMaker::scenechange), 3.0f);
 				break;
 			}
 			else
@@ -635,4 +663,152 @@ void GameMaker::checkCharacterCollision(float t)
 void GameMaker::onCharacterCollision()
 {
 	this->schedule(schedule_selector(GameMaker::checkCharacterCollision));
+}
+
+//무기와 Castle 충돌 검사
+void GameMaker::checkCastleCollision(float t)
+{
+	Weapon* weapon = NULL;
+	Castle* castle = NULL;
+
+	for (std::vector<Weapon*>::iterator iterWeapon = arrWeapon.begin(); iterWeapon != arrWeapon.end(); iterWeapon++)
+	{
+		weapon = (Weapon*)*iterWeapon;
+
+		bool bHit = false;
+		for (std::vector<Castle*>::iterator iterCastle = arrCastle.begin(); iterCastle != arrCastle.end(); iterCastle++)
+		{
+			castle = (Castle*)*iterCastle;
+
+			Rect boundingBox = castle->getCastleBody()->getBoundingBox();
+			if (boundingBox.containsPoint(weapon->getweaponBody()->getPosition()))
+			{
+				bHit = true;
+				if (castle->getIsEnemy() == true)
+				{
+					if (0 >= castle->subEnergy(weapon->getDamage()))
+					{
+						log("%f", castle->subEnergy(0));
+						castle->release();
+						delete castle;
+						iterCastle = arrCastle.erase(iterCastle);
+						if (iterCastle == arrCastle.end())
+							break;
+					}
+					else
+					{
+						log("%f", castle->subEnergy(0));
+					}
+					break;
+				}
+			}
+		}
+		if (true == bHit)
+		{
+			weapon->release();
+			delete weapon;
+			iterWeapon = arrWeapon.erase(iterWeapon);
+			if (iterWeapon == arrWeapon.end())
+				break;
+		}
+	}
+}
+
+//Create Castle
+void GameMaker::createCastle()
+{
+	Castle* eCaslte = Castle::createCastle(0);//0 is Enemy
+	Castle* fCaslte = Castle::createCastle(1);//1 is Friend
+
+	auto eCastleBody = eCaslte->getCastleBody();
+	auto fCastleBody = fCaslte->getCastleBody();
+
+	fCastleBody->setPosition(Point(200, (winSize.height / 4)+20));
+	fCastleBody->setAnchorPoint(Point(0.0, 0.5));
+	eCastleBody->setPosition(Point(2450, (winSize.height / 4) + 20));
+	fCastleBody->setAnchorPoint(Point(1.0, 0.5));
+
+	backgroundLayer->addChild(eCaslte->getCastleBody());
+	backgroundLayer->addChild(fCaslte->getCastleBody());
+	this->addCastleList(eCaslte);
+	this->addCastleList(fCaslte);
+}
+//Castle vector에 추가.
+void GameMaker::addCastleList(Castle* castle)
+{
+	if (true == castle->getIsEnemy())
+		arrCastle.push_back(castle);
+}
+
+//mission end
+void GameMaker::missionEnd(float HP)
+{
+	if (HP <= 0)
+	{
+		auto gameover = Label::createWithSystemFont("Game Over !!", "Thonburi", 34);
+		gameover->setAnchorPoint(Point(1.0, 1.0));
+		gameover->setPosition(Point(winSize.width / 2, winSize.height / 2));
+
+		this->addChild(gameover);
+	}
+	else
+	{
+		auto clearMessage = Label::createWithSystemFont("Game Clear !!", "Thonburi", 34);
+		clearMessage->setAnchorPoint(Point(1.0, 1.0));
+		clearMessage->setPosition(Point(winSize.width / 2, winSize.height / 2));
+
+		this->addChild(clearMessage);
+	}
+}
+//Timer set
+void GameMaker::createTimer()
+{
+	winSize = Director::getInstance()->getWinSize();
+
+	CCSprite* timeBar = CCSprite::create("Timer.png");
+	_progressTimeBar = CCProgressTimer::create(timeBar);
+	_progressTimeBar->setPosition(ccp(winSize.width * 0.5f, winSize.height-50));
+	_progressTimeBar->setPercentage(100.0f);
+	_progressTimeBar->setMidpoint(ccp(0, 0.5f));
+	_progressTimeBar->setBarChangeRate(ccp(1, 0));
+	_progressTimeBar->setType(kCCProgressTimerTypeBar);
+
+	this->addChild(_progressTimeBar);
+
+	CCProgressFromTo* progressToZero = CCProgressFromTo::create(60, 100, 0);
+	_progressTimeBar->runAction(progressToZero);
+
+	CCSprite* timeOutline = CCSprite::create("Timer_square.png");
+	timeOutline->setPosition(ccp(winSize.width * 0.5f, winSize.height - 50));
+	timeOutline->setVisible(true);
+	this->addChild(timeOutline,2);
+	
+	initGameCoin();
+}
+
+void GameMaker::initGameCoin()
+{
+	_gameTime = 60;  // set sec.
+}
+
+void GameMaker::timeCount(float t)
+{
+	if (--_gameTime == 0) {
+		changeToOpeningScene();
+	}
+}
+
+void GameMaker::changeToOpeningScene()
+{
+	this->unschedule(schedule_selector(GameMaker::timeCount));
+	CCDirector::sharedDirector()->pause();
+	CCScene* pScene =Pop::createScene();
+	this->addChild(pScene, 2000);
+}
+
+//scene change
+void GameMaker::scenechange(float d)
+{
+	auto pScene = GameIntro::createScene();
+	Director::getInstance()->replaceScene(TransitionFade::create(1.0, pScene));
 }

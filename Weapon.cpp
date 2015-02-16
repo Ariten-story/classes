@@ -4,7 +4,7 @@
 Weapon::Weapon()
 {
 	weaponBody = NULL;
-	isEnermy = false;
+	isEnermy = true;
 	isshortdistance = false;
 	damage = 0;
 	speedOfAttack = 0;
