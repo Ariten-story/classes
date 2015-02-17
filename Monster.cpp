@@ -64,11 +64,11 @@ float Monster::subEnergy(float damage)
 	{
 		curEnergy = 0;
 
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	}
 	else
 	{
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	}
 	return curEnergy;
 }
@@ -125,10 +125,10 @@ float Monster::getSpeedOfMove()
 void Monster::setHpBar()
 {
 	//라벨초기화
-	labelHP = Label::createWithSystemFont("", "", 100);
+	labelHP = Label::createWithSystemFont("", "", 40);
 	labelHP->setAnchorPoint(Point(0.5, 0));
 	labelHP->setPosition(Point(monsterBody->getContentSize().width / 2, monsterBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
-	labelHP->setString(StringUtils::format("%d", curEnergy));
+	labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	monsterBody->addChild(labelHP);
 }

@@ -65,11 +65,11 @@ float Castle::subEnergy(float damage)
 	{
 		curEnergy = 0;
 
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	}
 	else
 	{
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	}
 	return curEnergy;
 }
@@ -89,11 +89,11 @@ Sprite* Castle::getCastleBody()
 void Castle::setHpBar()
 {
 	//라벨초기화
-	labelHP = Label::createWithSystemFont("", "", 100);
+	labelHP = Label::createWithSystemFont("", "", 40);
 	labelHP->setAnchorPoint(Point(0.5, 0));
 	labelHP->setPosition(Point(castleBody->getContentSize().width / 2, castleBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
-	labelHP->setString(StringUtils::format("%d", curEnergy));
+	labelHP->setString(StringUtils::format("%d/%d", maxEnergy,curEnergy));
 	castleBody->addChild(labelHP);
 }
 //set isEnemyCastle

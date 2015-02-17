@@ -83,11 +83,11 @@ float Player::subEnergy(float damage)
 	log("%f", curEnergy);
 	if (curEnergy < 0)
 	{
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d", maxEnergy,curEnergy));
 	}
 	else
 	{
-		labelHP->setString(StringUtils::format("%d", curEnergy));
+		labelHP->setString(StringUtils::format("%d/%d",maxEnergy, curEnergy));
 	}
 	return curEnergy;
 }
@@ -144,10 +144,10 @@ float Player::getSpeedOfMove()
 void Player::setHpBar()
 {
 	//라벨초기화
-	labelHP = Label::createWithSystemFont("", "", 100);
+	labelHP = Label::createWithSystemFont("", "", 40);
 	labelHP->setAnchorPoint(Point(0.5,0));
 	labelHP->setPosition(Point(characterBody->getContentSize().width/2, characterBody->getContentSize().height));
 	labelHP->setColor(Color3B::BLACK);
-	labelHP->setString(StringUtils::format("%d", curEnergy));
+	labelHP->setString(StringUtils::format("%d/%d", maxEnergy, curEnergy));
 	characterBody->addChild(labelHP);
 }

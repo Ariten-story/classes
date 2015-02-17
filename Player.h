@@ -16,7 +16,7 @@ private:
 	Sprite* characterBody;//Player Sprite.
 	Label* labelHP;//에너지바 폰트.
 
-	float maxEnergy; //Player 최대HP.
+	int maxEnergy; //Player 최대HP.
 	int curEnergy; //Player 현재HP.
 	float defensivePower; //Player 방어력.
 	float speedOfMove; //Player 이동속도.

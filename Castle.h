@@ -9,8 +9,9 @@ class Castle
 private:
 	Sprite* castleBody; //Enemy Castle Sprite.
 	Label* labelHP;//에너지바 폰트.
-	float maxEnergy; //Castle Max HP.
-	float curEnergy; //Castle Current HP.
+
+	int maxEnergy; //Castle Max HP.
+	int curEnergy; //Castle Current HP.
 	bool isEnemyCastle;
 
 public:
